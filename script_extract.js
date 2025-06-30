@@ -109,7 +109,7 @@ copyBtn.addEventListener('click', () => {
 
  // Tampilkan notif
       downloadBar.style.display = 'block';
-      
+  
       const waLink = document.getElementById('waLink');
       const pesan = encodeURIComponent('File PDF berhasil digabung. Silakan download file PDF hasil gabungan.');
       waLink.href = `https://wa.me/?text=${pesan}`;
