@@ -99,15 +99,12 @@ Status : ${status}`;
 
     output.textContent = finalOutput;
 
-    // WhatsApp Integration
-    if (finalOutput) {
-      const pesan = encodeURIComponent(finalOutput);
-      waLink.href = `https://wa.me/?text=${pesan}`;
-      waLink.style.display = 'inline-block';
-    } else {
-      waLink.style.display = 'none';
-    }
-  };
+// WhatsApp Integration
+const waLink = document.getElementById("waLink");
+const pesan = encodeURIComponent(finalOutput);
+waLink.href = `https://wa.me/?text=${pesan}`;
+waLink.style.display = "inline-block";
+
 
   reader.readAsArrayBuffer(file);
 });
