@@ -107,11 +107,11 @@ copyBtn.addEventListener('click', () => {
   navigator.clipboard.writeText(output.textContent || '').catch(console.error);
 });
 
- // Tampilkan notif
-      downloadBar.style.display = 'block';
-  
-      const waLink = document.getElementById('waLink');
-      const pesan = encodeURIComponent('File PDF berhasil digabung. Silakan download file PDF hasil gabungan.');
-      waLink.href = `https://wa.me/?text=${pesan}`;
-      waLink.style.display = 'inline-block';
-    });
+          lastExtractedText = finalOutput;
+    output.textContent = finalOutput;
+
+    // Tambah ini untuk WA
+    const waLink = document.getElementById('waLink');
+    const pesan = encodeURIComponent(finalOutput);
+    waLink.href = `https://wa.me/?text=${pesan}`;
+    waLink.style.display = 'inline-block';
