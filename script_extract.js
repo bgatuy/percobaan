@@ -97,17 +97,18 @@ PIC : ${pic}
 Status : ${status}`;
 
 
-    output.textContent = finalOutput;
+        output.textContent = finalOutput;
 
-// WhatsApp Integration
-const waLink = document.getElementById("waLink");
-const pesan = encodeURIComponent(finalOutput);
-waLink.href = `https://wa.me/?text=${pesan}`;
-waLink.style.display = "inline-block";
+    // WhatsApp Integration
+    const waLink = document.getElementById("waLink");
+    const pesan = encodeURIComponent(finalOutput);
+    waLink.href = `https://wa.me/?text=${pesan}`;
+    waLink.style.display = "inline-block";
+  };
 
+  reader.readAsArrayBuffer(file); // ✅ Jangan ada kurung kurawal setelah ini
+}); // ✅ Ini hanya menutup fileInput.addEventListener
 
-  reader.readAsArrayBuffer(file);
-});
 
 copyBtn.addEventListener('click', () => {
   navigator.clipboard.writeText(output.textContent || '').catch(console.error);
