@@ -72,30 +72,30 @@ fileInput.addEventListener('change', async function () {
     const pic = clean(rawText.match(/Pelapor\s*:\s*([^\(]+)/)?.[1]);
     const status = clean(rawText.match(/STATUS PEKERJAAN\s*:\s*(.+)/)?.[1]);
 
-    finalOutput =
-\`Selamat Pagi/Siang/Sore Petugas Call Center, Update Pekerjaan
+   finalOutput = `Selamat Pagi/Siang/Sore Petugas Call Center, Update Pekerjaan
 
-Unit Kerja : \${unitKerja}
-Kantor Cabang : \${kantorCabang}
+Unit Kerja : ${unitKerja}
+Kantor Cabang : ${kantorCabang}
 
-Tanggal : \${tanggalFormatted}
+Tanggal : ${tanggalFormatted}
 
-Jenis Pekerjaan (Problem) : \${problem}
+Jenis Pekerjaan (Problem) : ${problem}
 
-Berangkat : \${berangkat}
-Tiba : \${tiba}
-Mulai : \${mulai}
-Selesai : \${selesai}
+Berangkat : ${berangkat}
+Tiba : ${tiba}
+Mulai : ${mulai}
+Selesai : ${selesai}
 
-Progress : \${solusi}
+Progress : ${solusi}
 
-Jenis Perangkat : \${jenisPerangkat}
-Serial Number : \${serial}
-Merk Perangkat : \${merk}
-Type Perangkat : \${type}
+Jenis Perangkat : ${jenisPerangkat}
+Serial Number : ${serial}
+Merk Perangkat : ${merk}
+Type Perangkat : ${type}
 
-PIC : \${pic}
-Status : \${status}\`;
+PIC : ${pic}
+Status : ${status}`;
+
 
     output.textContent = finalOutput;
 
