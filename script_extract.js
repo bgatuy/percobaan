@@ -100,6 +100,16 @@ Status : ${status}`;
     output.textContent = finalOutput;
   };
 
+  const waLink = document.getElementById('waLink');
+if (finalOutput) {
+  const pesan = encodeURIComponent(finalOutput);
+  waLink.href = `https://wa.me/?text=${pesan}`;
+  waLink.style.display = 'inline-block';
+} else {
+  waLink.style.display = 'none';
+}
+
+
   reader.readAsArrayBuffer(file);
 });
 
