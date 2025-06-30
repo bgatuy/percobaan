@@ -106,7 +106,7 @@ waLink.href = `https://wa.me/?text=${pesan}`;
 waLink.style.display = "inline-block";
 
 
-  reader.readAsArrayBuffer(file);
+  reader.readAsArrayBuffer(file);{
 });
 
 copyBtn.addEventListener('click', () => {
