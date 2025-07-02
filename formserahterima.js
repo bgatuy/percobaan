@@ -124,14 +124,23 @@ function tampilkanTabel() {
 function exportHTMLToPDF() {
   const element = document.getElementById('tabelHasil');
   const opt = {
-    margin:       0.5,
-    filename:     'Tanda_Terima_CM.pdf',
-    image:        { type: 'jpeg', quality: 0.98 },
-    html2canvas:  { scale: 2 },
-    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+    margin: 0.5,
+    filename: 'Tanda_Terima_CM.pdf',
+    image: { type: 'jpeg', quality: 1 },
+    html2canvas: {
+      scale: 3,
+      useCORS: true,
+      backgroundColor: '#ffffff'
+    },
+    jsPDF: {
+      unit: 'in',
+      format: 'a4',
+      orientation: 'portrait'
+    }
   };
   html2pdf().set(opt).from(element).save();
 }
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const inputFile = document.getElementById('multiPdf');
