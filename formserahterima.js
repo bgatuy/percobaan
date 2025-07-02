@@ -1,4 +1,4 @@
-// === formserahterima.js FINAL PDF DARI HTML TABLE + RESPONSIVE + DARKMODE ===
+// === formserahterima.js FINAL FIX: PDF SELALU TERANG + TANPA TABEL GANDA ===
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
 
@@ -76,76 +76,49 @@ async function prosesFile() {
 
 function tampilkanTabel() {
   const div = document.getElementById('tabelHasil');
-  const html = [`<style>
-    @media (prefers-color-scheme: dark) {
-      body { background: #121212; color: #ffffff; }
-      .upload-label, button { background-color: #1e88e5; color: white; }
-      .upload-label:hover, button:hover { background-color: #1565c0; }
-      table, th, td { color: #ffffff !important; background: #1e1e1e !important; border-color: #444; }
-      input[type="date"] { background: #2c2c2c; color: white; border: 1px solid #555; }
-    }
-    @media (max-width: 600px) {
-      h1 { font-size: 24px !important; }
-      .upload-label { width: 100%; text-align: center; font-size: 16px; }
-      #fileCount { display: block; text-align: center; margin-top: 6px; }
-      table { font-size: 12px !important; }
-    }
-  </style>
-  <div style="text-align:center; font-family:Calibri; font-size:35px; margin-bottom:10px;"><strong>FORM TANDA TERIMA CM</strong></div>
-    <table id="printTable" border="1" cellspacing="0" cellpadding="8" style="width:100%; border-collapse:collapse; font-family:Calibri;">
-    <thead>
-      <tr style="background:none; text-transform:uppercase; font-size:14px;">
-        <th>No.</th>
-        <th>Tanggal Serah Terima</th>
-        <th>Nama Uker</th>
-        <th>Tanggal Pekerjaan</th>
-      </tr>
-    </thead>
-    <tbody style="font-size:12px;">` +
+  const html = [`<div id="exportArea" style="font-family:Calibri; max-width:800px; margin:0 auto; color:#000; background:#fff;">
+    <h2 style="text-align:center; font-size:28px;">FORM TANDA TERIMA CM</h2>
+    <table border="1" cellspacing="0" cellpadding="8" style="width:100%; border-collapse:collapse; font-size:12px;">
+      <thead>
+        <tr style="text-transform:uppercase; font-size:14px;">
+          <th>No.</th>
+          <th>Tanggal Serah Terima</th>
+          <th>Nama Uker</th>
+          <th>Tanggal Pekerjaan</th>
+        </tr>
+      </thead>
+      <tbody>` +
     dataTabel.map(row => `<tr>
-        <td>${row.no}</td>
-        <td>${row.tanggalSerah}</td>
-        <td>${row.namaUker}</td>
-        <td>${row.tanggalPekerjaan}</td>
-      </tr>`).join('') +
+          <td>${row.no}</td>
+          <td>${row.tanggalSerah}</td>
+          <td>${row.namaUker}</td>
+          <td>${row.tanggalPekerjaan}</td>
+        </tr>`).join('') +
     `</tbody>
     </table>
-
-    <br><br>
-    <table border="1" cellspacing="0" cellpadding="16" style="width:100%; text-align:center; font-family:Calibri; font-size:14px; border-collapse:collapse">
+    <br />
+    <table border="1" cellspacing="0" cellpadding="16" style="width:100%; text-align:center; font-size:14px;">
       <tr>
-        <th style="font-size:14px; width:33.33%">TTD TEKNISI</th>
-        <th style="font-size:14px; width:33.33%">TTD LEADER</th>
-        <th style="font-size:14px; width:33.33%">TTD CALL CENTER</th>
+        <th style="width:33.33%">TTD TEKNISI</th>
+        <th style="width:33.33%">TTD LEADER</th>
+        <th style="width:33.33%">TTD CALL CENTER</th>
       </tr>
       <tr style="height:100px">
-        <td></td>
-        <td></td>
-        <td></td>
+        <td></td><td></td><td></td>
       </tr>
-    </table>`];
+    </table>
+  </div>`];
   div.innerHTML = html;
 }
 
 function exportHTMLToPDF() {
-  const source = document.getElementById('tabelHasil').cloneNode(true);
-
-  // force white background & black text
-  source.style.backgroundColor = '#ffffff';
-  source.style.color = '#000000';
-  source.querySelectorAll('table, th, td').forEach(el => {
-    el.style.backgroundColor = '#ffffff';
-    el.style.color = '#000000';
-    el.style.borderColor = '#000000';
-  });
-
+  const source = document.getElementById('exportArea');
   const opt = {
-    margin: 0.5,
+    margin: 0.3,
     filename: 'Tanda_Terima_CM.pdf',
     image: { type: 'jpeg', quality: 1 },
     html2canvas: {
       scale: 2,
-      useCORS: true,
       backgroundColor: '#ffffff'
     },
     jsPDF: {
@@ -154,10 +127,8 @@ function exportHTMLToPDF() {
       orientation: 'portrait'
     }
   };
-
   html2pdf().set(opt).from(source).save();
 }
-
 
 document.addEventListener('DOMContentLoaded', () => {
   const inputFile = document.getElementById('multiPdf');
@@ -165,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   inputFile.addEventListener('change', () => {
     const count = inputFile.files.length;
-    fileCount.textContent = count > 0 ? `📂 ${count} file dipilih` : '';
+    fileCount.textContent = count > 0 ? `📁 ${count} file dipilih` : '';
   });
 
   document.getElementById('downloadBtn').addEventListener('click', exportHTMLToPDF);
