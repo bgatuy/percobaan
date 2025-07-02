@@ -2,29 +2,37 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Form Tanda Terima CM</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script> <!-- ✅ Tambahkan ini -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="formserahterima.js" defer></script>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-  <!-- ✅ Favicon ditambahkan di sini -->
-  <link rel="icon" href="https://api.iconify.design/mdi:file-document.svg" type="image/svg+xml" />
-
-  <!-- Style dan ikon -->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
-
-<style>
+  <style>
     body {
       font-family: Calibri, sans-serif;
       padding: 20px;
+      background: #fff;
+      color: #000;
+      text-align: center;
     }
-    #tanggalSerah {
-      padding: 8px 12px;
-      font-size: 16px;
-      border: 2px solid #ccc;
+    .upload-label {
+      display: inline-block;
+      background-color: #007bff;
+      color: white;
+      padding: 10px 18px;
       border-radius: 6px;
-      outline: none;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .upload-label:hover {
+      background-color: #0056b3;
+    }
+    .material-icons {
+      font-size: 18px;
+      margin-right: 6px;
+      vertical-align: middle;
     }
     button {
       background-color: #007bff;
@@ -36,74 +44,36 @@
       cursor: pointer;
       margin: 8px 4px;
     }
-    table {
-      margin-top: 20px;
-      border-collapse: collapse;
-      width: 100%;
-      font-size: 14px;
+    @media (max-width: 600px) {
+      h1 { font-size: 24px; }
+      .upload-label { width: 100%; text-align: center; font-size: 16px; }
+      #fileCount { display: block; text-align: center; margin-top: 6px; }
+      #printTable { display: block; overflow-x: auto; white-space: nowrap; }
+      table { font-size: 12px !important; }
     }
-    th, td {
-      border: 1px solid #333;
-      padding: 10px;
-      text-align: center;
-    }
-
-   .upload-label {
-  display: inline-block;
-  background-color: #007bff;
-  color: white;
-  padding: 15px 20px;
-  border-radius: 6px;
-  font-family: Calibri, sans-serif;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.upload-label:hover {
-  background-color: #0056b3;
-}
-
-.material-icons {
-  font-size: 18px;
-  margin-right: 6px;
-  vertical-align: middle;
-}
-</style>
+  </style>
 </head>
 <body>
- <nav style="margin-bottom: 20px; text-align:center; color: #007bff;">
-    <a href="index.html" style="color: #007bff; text-decoration;">Extract PDF</a> |
-    <a href="formserahterima.html" style="color: #007bff; text-decoration;">Buat Form Serah Terima</a> |
-    <a href="merge.html" style="color: #007bff; text-decoration;">Merge PDF</a>
- </nav>
+  <h1>Form Tanda Terima CM</h1>
 
-  <div style="text-align: center; margin-top: 30px;">
-    <h1>
-    <span class="material-icons">assignment</span>
-    Mager Bikin Form Tanda Terima CM
-  </h1>
-  <h2>Upload Form PDF Kalian Disini!</h2>
+  <label for="tanggalSerah">Input Tanggal Serah Terima:</label>
+  <input type="date" id="tanggalSerah" />
 
-    <label for="tanggalSerah">Input Tanggal Serah Terima:</label>
-    <input type="date" id="tanggalSerah" style="margin-bottom: 10px;" />
+  <br /><br />
 
-    <br>
-
-    <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px;">
-  <label for="multiPdf" class="upload-label">
-    <span class="material-icons">upload_file</span> Pilih File PDF
-  </label>
-  <span id="fileCount" style="font-family: Calibri; font-size: 14px;"></span>
-</div>
-
-<input type="file" id="multiPdf" multiple accept="application/pdf" style="display: none;" />
-
-    <button onclick="prosesFile()">Proses</button>
-    <button id="downloadBtn" style="display:none">Download PDF</button>
+  <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+    <label for="multiPdf" class="upload-label">
+      <span class="material-icons">upload_file</span> Pilih File PDF
+    </label>
+    <span id="fileCount" style="font-size: 14px;"></span>
   </div>
 
-  <div id="tabelHasil" style="margin-top: 30px;"></div>
+  <input type="file" id="multiPdf" multiple accept="application/pdf" style="display: none;" />
 
+  <br />
+  <button onclick="prosesFile()">Proses</button>
+  <button id="downloadBtn" style="display:none">Download PDF</button>
+
+  <div id="tabelHasil" style="margin-top: 30px;"></div>
 </body>
 </html>
