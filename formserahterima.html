@@ -4,24 +4,30 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Form Tanda Terima CM</title>
+
+  <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+  <!-- Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <script src="formserahterima.js" defer></script>
   <!-- ✅ Favicon ditambahkan di sini -->
   <link rel="icon" href="https://api.iconify.design/mdi:file-document.svg" type="image/svg+xml" />
 
   <!-- Style dan ikon -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+
+  <!-- CSS -->
   <style>
     body {
       font-family: Calibri, sans-serif;
       padding: 20px;
-      background: #fff;
+      background-color: #fff;
       color: #000;
       text-align: center;
     }
+
     .upload-label {
       display: inline-block;
       background-color: #007bff;
@@ -32,14 +38,17 @@
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
+
     .upload-label:hover {
       background-color: #0056b3;
     }
+
     .material-icons {
       font-size: 18px;
       margin-right: 6px;
       vertical-align: middle;
     }
+
     button {
       background-color: #007bff;
       color: white;
@@ -50,21 +59,34 @@
       cursor: pointer;
       margin: 8px 4px;
     }
+
+    #tabelHasil {
+      margin-top: 30px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body { background: #121212; color: #ffffff; }
+      .upload-label, button { background-color: #1e88e5; color: white; }
+      .upload-label:hover, button:hover { background-color: #1565c0; }
+      table, th, td { color: #ffffff !important; background: #1e1e1e !important; border-color: #444; }
+      input[type="date"] { background: #2c2c2c; color: white; border: 1px solid #555; }
+    }
+
     @media (max-width: 600px) {
-      h1 { font-size: 24px; }
-      .upload-label { width: 100%; text-align: center; font-size: 16px; }
+      h1 { font-size: 24px !important; }
+      .upload-label { width: 100%; font-size: 16px; }
       #fileCount { display: block; text-align: center; margin-top: 6px; }
-      #printTable { display: block; overflow-x: auto; white-space: nowrap; }
       table { font-size: 12px !important; }
     }
   </style>
 </head>
 <body>
-   <nav style="margin-bottom: 20px; text-align:center; color: #007bff;">
+ <nav style="margin-bottom: 20px; text-align:center; color: #007bff;">
     <a href="index.html" style="color: #007bff; text-decoration;">Extract PDF</a> |
     <a href="formserahterima.html" style="color: #007bff; text-decoration;">Buat Form Serah Terima</a> |
     <a href="merge.html" style="color: #007bff; text-decoration;">Merge PDF</a>
  </nav>
+  
   <h1>Form Tanda Terima CM</h1>
 
   <label for="tanggalSerah">Input Tanggal Serah Terima:</label>
@@ -85,6 +107,8 @@
   <button onclick="prosesFile()">Proses</button>
   <button id="downloadBtn" style="display:none">Download PDF</button>
 
-  <div id="tabelHasil" style="margin-top: 30px;"></div>
+  <div id="tabelHasil"></div>
+
+  <script src="formserahterima.js"></script>
 </body>
 </html>
