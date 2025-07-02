@@ -1,4 +1,4 @@
-// === formserahterima.js FINAL FIX: PDF SELALU TERANG + TANPA TABEL GANDA ===
+// === formserahterima.js FINAL FIX CLEAN ===
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
 
@@ -77,8 +77,8 @@ async function prosesFile() {
 function tampilkanTabel() {
   const div = document.getElementById('tabelHasil');
   const html = [`<div id="exportArea" style="font-family:Calibri; max-width:800px; margin:0 auto; color:#000; background:#fff;">
-    <h2 style="text-align:center; font-size:28px;">FORM TANDA TERIMA CM</h2>
-    <table border="1" cellspacing="0" cellpadding="8" style="width:100%; border-collapse:collapse; font-size:12px;">
+    <h2 style="text-align:center; font-size:28px; color:#000;">FORM TANDA TERIMA CM</h2>
+    <table border="1" cellspacing="0" cellpadding="8" style="width:100%; border-collapse:collapse; font-size:12px; color:#000; background:#fff;">
       <thead>
         <tr style="text-transform:uppercase; font-size:14px;">
           <th>No.</th>
@@ -97,13 +97,13 @@ function tampilkanTabel() {
     `</tbody>
     </table>
     <br />
-    <table border="1" cellspacing="0" cellpadding="16" style="width:100%; text-align:center; font-size:14px;">
+    <table border="1" cellspacing="0" cellpadding="20" style="width:100%; text-align:center; font-size:14px; color:#000; background:#fff;">
       <tr>
         <th style="width:33.33%">TTD TEKNISI</th>
         <th style="width:33.33%">TTD LEADER</th>
         <th style="width:33.33%">TTD CALL CENTER</th>
       </tr>
-      <tr style="height:100px">
+      <tr style="height:125px">
         <td></td><td></td><td></td>
       </tr>
     </table>
