@@ -128,15 +128,23 @@ function tampilkanTabel() {
 }
 
 function exportHTMLToPDF() {
-  const element = document.getElementById('tabelHasil').cloneNode(true);
-  element.style.maxWidth = '100%';
-  element.style.overflow = 'visible';
+  const source = document.getElementById('tabelHasil').cloneNode(true);
+
+  // force white background & black text
+  source.style.backgroundColor = '#ffffff';
+  source.style.color = '#000000';
+  source.querySelectorAll('table, th, td').forEach(el => {
+    el.style.backgroundColor = '#ffffff';
+    el.style.color = '#000000';
+    el.style.borderColor = '#000000';
+  });
+
   const opt = {
     margin: 0.5,
     filename: 'Tanda_Terima_CM.pdf',
     image: { type: 'jpeg', quality: 1 },
     html2canvas: {
-      scale: 3,
+      scale: 2,
       useCORS: true,
       backgroundColor: '#ffffff'
     },
@@ -146,8 +154,10 @@ function exportHTMLToPDF() {
       orientation: 'portrait'
     }
   };
-  html2pdf().set(opt).from(element).save();
+
+  html2pdf().set(opt).from(source).save();
 }
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const inputFile = document.getElementById('multiPdf');
