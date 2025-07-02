@@ -1,4 +1,4 @@
-// === formserahterima.js FINAL FIX CLEAN ===
+// === formserahterima.js FINAL FIX LIGHTMODE PDF ===
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
 
@@ -76,7 +76,7 @@ async function prosesFile() {
 
 function tampilkanTabel() {
   const div = document.getElementById('tabelHasil');
-  const html = [`<div id="exportArea" style="font-family:Calibri; max-width:800px; margin:0 auto; color:#000; background:#fff;">
+  const html = [`<div id="exportArea" style="font-family:Calibri; max-width:800px; margin:0 auto; padding:20px; background:#ffffff; color:#000000;">
     <h2 style="text-align:center; font-size:28px; color:#000;">FORM TANDA TERIMA CM</h2>
     <table border="1" cellspacing="0" cellpadding="8" style="width:100%; border-collapse:collapse; font-size:12px; color:#000; background:#fff;">
       <thead>
@@ -97,14 +97,16 @@ function tampilkanTabel() {
     `</tbody>
     </table>
     <br />
-    <table border="1" cellspacing="0" cellpadding="20" style="width:100%; text-align:center; font-size:14px; color:#000; background:#fff;">
+    <table border="1" cellspacing="0" cellpadding="20" style="width:100%; text-align:center; font-size:14px; color:#000000; background:#ffffff;">
       <tr>
-        <th style="width:33.33%">TTD TEKNISI</th>
-        <th style="width:33.33%">TTD LEADER</th>
-        <th style="width:33.33%">TTD CALL CENTER</th>
+        <th style="width:33.33%; color:#000; background:#fff;">TTD TEKNISI</th>
+        <th style="width:33.33%; color:#000; background:#fff;">TTD LEADER</th>
+        <th style="width:33.33%; color:#000; background:#fff;">TTD CALL CENTER</th>
       </tr>
-      <tr style="height:125px">
-        <td></td><td></td><td></td>
+      <tr style="height:120px">
+        <td style="background:#fff;"></td>
+        <td style="background:#fff;"></td>
+        <td style="background:#fff;"></td>
       </tr>
     </table>
   </div>`];
@@ -115,11 +117,9 @@ function exportHTMLToPDF() {
   const original = document.getElementById('exportArea');
   const clone = original.cloneNode(true);
 
-  // Paksa semua gaya light mode di clone
   clone.style.color = '#000';
   clone.style.backgroundColor = '#fff';
 
-  // Terapkan juga ke seluruh tabel dan teks di dalamnya
   clone.querySelectorAll('*').forEach(el => {
     el.style.backgroundColor = '#fff';
     el.style.color = '#000';
@@ -140,10 +140,8 @@ function exportHTMLToPDF() {
       orientation: 'portrait'
     }
   };
-
   html2pdf().set(opt).from(clone).save();
 }
-
 
 document.addEventListener('DOMContentLoaded', () => {
   const inputFile = document.getElementById('multiPdf');
