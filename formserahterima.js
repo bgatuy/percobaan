@@ -1,4 +1,4 @@
-// === formserahterima.js FINAL PDF DARI HTML TABLE + RESPONSIVE SUPPORT ===
+// === formserahterima.js FINAL PDF DARI HTML TABLE + RESPONSIVE + DARKMODE ===
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
 
@@ -77,11 +77,17 @@ async function prosesFile() {
 function tampilkanTabel() {
   const div = document.getElementById('tabelHasil');
   const html = [`<style>
+    @media (prefers-color-scheme: dark) {
+      body { background: #121212; color: #ffffff; }
+      .upload-label, button { background-color: #1e88e5; color: white; }
+      .upload-label:hover, button:hover { background-color: #1565c0; }
+      table, th, td { color: #ffffff !important; background: #1e1e1e !important; border-color: #444; }
+      input[type="date"] { background: #2c2c2c; color: white; border: 1px solid #555; }
+    }
     @media (max-width: 600px) {
       h1 { font-size: 24px !important; }
       .upload-label { width: 100%; text-align: center; font-size: 16px; }
       #fileCount { display: block; text-align: center; margin-top: 6px; }
-      #printTable { display: block; overflow-x: auto; white-space: nowrap; }
       table { font-size: 12px !important; }
     }
   </style>
@@ -122,7 +128,9 @@ function tampilkanTabel() {
 }
 
 function exportHTMLToPDF() {
-  const element = document.getElementById('tabelHasil');
+  const element = document.getElementById('tabelHasil').cloneNode(true);
+  element.style.maxWidth = '100%';
+  element.style.overflow = 'visible';
   const opt = {
     margin: 0.5,
     filename: 'Tanda_Terima_CM.pdf',
@@ -140,7 +148,6 @@ function exportHTMLToPDF() {
   };
   html2pdf().set(opt).from(element).save();
 }
-
 
 document.addEventListener('DOMContentLoaded', () => {
   const inputFile = document.getElementById('multiPdf');
