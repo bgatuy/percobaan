@@ -1,4 +1,4 @@
-// === formserahterima.js FINAL PDF DARI HTML TABLE ===
+// === formserahterima.js FINAL PDF DARI HTML TABLE + RESPONSIVE SUPPORT ===
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
 
@@ -76,7 +76,16 @@ async function prosesFile() {
 
 function tampilkanTabel() {
   const div = document.getElementById('tabelHasil');
-  const html = [`<div style="text-align:center; font-family:Calibri; font-size:35px; margin-bottom:10px;"><strong>FORM TANDA TERIMA CM</strong></div>
+  const html = [`<style>
+    @media (max-width: 600px) {
+      h1 { font-size: 24px !important; }
+      .upload-label { width: 100%; text-align: center; font-size: 16px; }
+      #fileCount { display: block; text-align: center; margin-top: 6px; }
+      #printTable { display: block; overflow-x: auto; white-space: nowrap; }
+      table { font-size: 12px !important; }
+    }
+  </style>
+  <div style="text-align:center; font-family:Calibri; font-size:35px; margin-bottom:10px;"><strong>FORM TANDA TERIMA CM</strong></div>
     <table id="printTable" border="1" cellspacing="0" cellpadding="8" style="width:100%; border-collapse:collapse; font-family:Calibri;">
     <thead>
       <tr style="background:none; text-transform:uppercase; font-size:14px;">
@@ -103,7 +112,7 @@ function tampilkanTabel() {
         <th style="font-size:14px; width:33.33%">TTD LEADER</th>
         <th style="font-size:14px; width:33.33%">TTD CALL CENTER</th>
       </tr>
-      <tr style="height:125px">
+      <tr style="height:100px">
         <td></td>
         <td></td>
         <td></td>
@@ -116,7 +125,7 @@ function exportHTMLToPDF() {
   const element = document.getElementById('tabelHasil');
   const opt = {
     margin:       0.5,
-    filename:     'Form Tanda Terima CM.pdf',
+    filename:     'Tanda_Terima_CM.pdf',
     image:        { type: 'jpeg', quality: 0.98 },
     html2canvas:  { scale: 2 },
     jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
@@ -124,17 +133,13 @@ function exportHTMLToPDF() {
   html2pdf().set(opt).from(element).save();
 }
 
-  document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
   const inputFile = document.getElementById('multiPdf');
   const fileCount = document.getElementById('fileCount');
 
   inputFile.addEventListener('change', () => {
     const count = inputFile.files.length;
-    if (count > 0) {
-      fileCount.textContent = `📂 ${count} file dipilih`;
-    } else {
-      fileCount.textContent = '';
-    }
+    fileCount.textContent = count > 0 ? `📂 ${count} file dipilih` : '';
   });
 
   document.getElementById('downloadBtn').addEventListener('click', exportHTMLToPDF);
