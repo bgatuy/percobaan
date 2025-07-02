@@ -112,7 +112,20 @@ function tampilkanTabel() {
 }
 
 function exportHTMLToPDF() {
-  const source = document.getElementById('exportArea');
+  const original = document.getElementById('exportArea');
+  const clone = original.cloneNode(true);
+
+  // Paksa semua gaya light mode di clone
+  clone.style.color = '#000';
+  clone.style.backgroundColor = '#fff';
+
+  // Terapkan juga ke seluruh tabel dan teks di dalamnya
+  clone.querySelectorAll('*').forEach(el => {
+    el.style.backgroundColor = '#fff';
+    el.style.color = '#000';
+    el.style.borderColor = '#000';
+  });
+
   const opt = {
     margin: 0.3,
     filename: 'Tanda_Terima_CM.pdf',
@@ -127,8 +140,10 @@ function exportHTMLToPDF() {
       orientation: 'portrait'
     }
   };
-  html2pdf().set(opt).from(source).save();
+
+  html2pdf().set(opt).from(clone).save();
 }
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const inputFile = document.getElementById('multiPdf');
