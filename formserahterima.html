@@ -78,6 +78,34 @@
       #fileCount { display: block; text-align: center; margin-top: 6px; }
       table { font-size: 12px !important; }
     }
+
+    @media (max-width: 600px) {
+  table, th, td {
+    font-size: 12px !important;
+    word-break: break-word;
+  }
+
+  table {
+    width: 100% !important;
+  }
+
+  .button-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .upload-label {
+    width: 100%;
+    text-align: center;
+  }
+
+  #fileCount {
+    text-align: center;
+    display: block;
+  }
+}
+
   </style>
 </head>
 <body>
