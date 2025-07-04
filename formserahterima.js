@@ -127,4 +127,5 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs
         document.getElementById('fileCount').textContent = count ? `📁 ${count} file dipilih` : '';
       });
       document.getElementById('downloadBtn').addEventListener('click', exportHTMLToPDF);
+      document.getElementById('prosesBtn').addEventListener('click', prosesFile);
     });
