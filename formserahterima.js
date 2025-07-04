@@ -114,12 +114,13 @@ function tampilkanTabel() {
 }
 
 function exportHTMLToPDF() {
-  const sourceEl = document.getElementById("exportArea");
-  if (!sourceEl) {
-    alert("Silakan klik 'Proses' terlebih dahulu.");
+  const content = document.getElementById("exportArea");
+  if (!content) {
+    alert("Silakan klik 'Proses' dulu.");
     return;
   }
 
+  // Render melalui iframe untuk jamin tidak gelap
   const iframe = document.createElement("iframe");
   iframe.style.position = "fixed";
   iframe.style.left = "-9999px";
@@ -127,21 +128,31 @@ function exportHTMLToPDF() {
 
   const doc = iframe.contentWindow.document;
   doc.open();
-  doc.write("<!DOCTYPE html><html><head><title>PDF</title>");
-  doc.write("<style>");
-  doc.write("body{font-family:Calibri,sans-serif;color:#000;background:#fff;padding:20px;}");
-  doc.write("table{border-collapse:collapse;width:100%;font-size:12px;}th,td{border:1px solid #000;padding:8px;text-align:center;}");
-  doc.write("th{text-transform:uppercase;font-size:14px;}");
-  doc.write("</style></head><body>");
-  doc.write(sourceEl.innerHTML);
-  doc.write("</body></html>");
+  doc.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>PDF</title>
+      <style>
+        body { font-family: Calibri, sans-serif; background: #fff; color: #000; padding: 20px; }
+        table { border-collapse: collapse; width: 100%; font-size: 12px; }
+        th, td { border: 1px solid #000; padding: 8px; text-align: center; }
+        th { text-transform: uppercase; font-size: 14px; }
+        h2 { text-align: center; font-size: 22px; margin-bottom: 20px; }
+      </style>
+    </head>
+    <body>
+      ${content.innerHTML}
+    </body>
+    </html>
+  `);
   doc.close();
 
   iframe.onload = () => {
     const iframeBody = iframe.contentWindow.document.body;
     html2pdf()
       .set({
-        margin: 0.7,
+        margin: 0.5,
         filename: "Tanda_Terima_CM.pdf",
         image: { type: "jpeg", quality: 1 },
         html2canvas: { scale: 2, backgroundColor: "#ffffff" },
@@ -154,6 +165,7 @@ function exportHTMLToPDF() {
       });
   };
 }
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const inputFile = document.getElementById('multiPdf');
