@@ -133,11 +133,11 @@
     let dataTabel = [];
 
     function extractFromPDFText(text) {
-      const lines = text.split("\\n").map(line => line.trim());
+      const lines = text.split('\n').map(line => line.trim());
       let namaUker = "";
       const startIndex = lines.findIndex(line => line.toLowerCase().startsWith("unit kerja"));
       if (startIndex !== -1) {
-        const match = lines[startIndex].match(/unit kerja\\s*:\\s*(.*)/i);
+        const tglMatch = text.match(/Tanggal Tiket\s*:\s*(\d{2}\/\d{2}\/\d{4})/);
         const collected = match && match[1] ? [match[1]] : [];
         for (let i = startIndex + 1; i < lines.length; i++) {
           if (/kantor cabang|tanggal|pelapor|jenis perangkat|asset id/i.test(lines[i])) break;
