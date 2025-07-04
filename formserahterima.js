@@ -1,4 +1,4 @@
-// === formserahterima.js FINAL FIX LIGHTMODE PDF STABLE ===
+// === formserahterima.js FINAL EXPORT PDF DENGAN jsPDF NATIVE ===
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
 
@@ -113,33 +113,31 @@ function tampilkanTabel() {
   div.innerHTML = html;
 }
 
-async function exportHTMLToPDF() {
+function exportHTMLToPDF() {
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
   const pageWidth = doc.internal.pageSize.getWidth();
   let y = 20;
 
-  // Title
-  doc.setFont("helvetica", "bold");
+  doc.setFont('helvetica', 'bold');
   doc.setFontSize(18);
-  doc.text("FORM TANDA TERIMA CM", pageWidth / 2, y, { align: "center" });
+  doc.text('FORM TANDA TERIMA CM', pageWidth / 2, y, { align: 'center' });
 
-  // Table header
   y += 10;
-  const colWidths = [15, 40, 95, 40]; // total: 190mm
-  const headers = ["No.", "Tanggal Serah", "Nama Uker", "Tanggal Pekerjaan"];
+  const headers = ['No.', 'Tanggal Serah', 'Nama Uker', 'Tanggal Pekerjaan'];
+  const colWidths = [15, 40, 95, 40];
   const startX = 10;
 
   doc.setFontSize(12);
-  doc.setFont("helvetica", "bold");
+  doc.setFont('helvetica', 'bold');
   headers.forEach((text, i) => {
-    doc.text(text, startX + colWidths.slice(0, i).reduce((a, b) => a + b, 0), y);
+    const x = startX + colWidths.slice(0, i).reduce((a, b) => a + b, 0);
+    doc.text(text, x, y);
   });
 
-  // Table rows
   y += 7;
-  doc.setFont("helvetica", "normal");
+  doc.setFont('helvetica', 'normal');
   dataTabel.forEach(row => {
     const rowData = [row.no, row.tanggalSerah, row.namaUker, row.tanggalPekerjaan];
     rowData.forEach((text, i) => {
@@ -154,31 +152,19 @@ async function exportHTMLToPDF() {
   });
 
   y += 15;
+  doc.setFont('helvetica', 'bold');
+  doc.text('TTD TEKNISI', 25, y);
+  doc.text('TTD LEADER', 90, y);
+  doc.text('TTD CALL CENTER', 150, y);
 
-  // TTD labels
-  const boxWidth = 50;
-  const spacing = 20;
-  const ttdX1 = 20;
-  const ttdX2 = ttdX1 + boxWidth + spacing;
-  const ttdX3 = ttdX2 + boxWidth + spacing;
-
-  doc.setFont("helvetica", "bold");
-  doc.text("TTD TEKNISI", ttdX1 + boxWidth / 2, y, { align: "center" });
-  doc.text("TTD LEADER", ttdX2 + boxWidth / 2, y, { align: "center" });
-  doc.text("TTD CALL CENTER", ttdX3 + boxWidth / 2, y, { align: "center" });
-
-  // TTD boxes
-  const boxY = y + 5;
+  y += 5;
   doc.setDrawColor(0);
-  doc.rect(ttdX1, boxY, boxWidth, 30);
-  doc.rect(ttdX2, boxY, boxWidth, 30);
-  doc.rect(ttdX3, boxY, boxWidth, 30);
+  doc.rect(20, y, 50, 30);
+  doc.rect(85, y, 50, 30);
+  doc.rect(145, y, 50, 30);
 
-  // Save file
-  doc.save("Tanda_Terima_CM.pdf");
+  doc.save('Tanda_Terima_CM.pdf');
 }
-
-
 
 document.addEventListener('DOMContentLoaded', () => {
   const inputFile = document.getElementById('multiPdf');
