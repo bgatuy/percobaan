@@ -113,27 +113,68 @@ function tampilkanTabel() {
   div.innerHTML = html;
 }
 
-function exportHTMLToPDF() {
-  const source = document.getElementById('exportArea');
+async function exportHTMLToPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({
+    orientation: "portrait",
+    unit: "mm",
+    format: "a4"
+  });
 
-  const opt = {
-    margin: 0.3,
-    filename: 'Tanda_Terima_CM.pdf',
-    image: { type: 'jpeg', quality: 1 },
-    html2canvas: {
-      scale: 2,
-      backgroundColor: '#ffffff',
-      ignoreElements: (el) => el.tagName === 'SCRIPT'
-    },
-    jsPDF: {
-      unit: 'in',
-      format: 'a4',
-      orientation: 'portrait'
+  const pageWidth = doc.internal.pageSize.getWidth();
+  let y = 20;
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(18);
+  doc.text("FORM TANDA TERIMA CM", pageWidth / 2, y, { align: "center" });
+
+  y += 10;
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "normal");
+
+  // Header
+  const headers = ["No.", "Tanggal Serah", "Nama Uker", "Tanggal Pekerjaan"];
+  const colWidths = [15, 40, 90, 40];
+  const startX = 15;
+
+  y += 10;
+  headers.forEach((text, i) => {
+    doc.text(text, startX + colWidths.slice(0, i).reduce((a, b) => a + b, 0), y);
+  });
+
+  y += 6;
+  // Body
+  dataTabel.forEach((row, idx) => {
+    const rowData = [row.no, row.tanggalSerah, row.namaUker, row.tanggalPekerjaan];
+    rowData.forEach((text, i) => {
+      doc.text(String(text), startX + colWidths.slice(0, i).reduce((a, b) => a + b, 0), y);
+    });
+    y += 6;
+    if (y > 260) {
+      doc.addPage();
+      y = 20;
     }
-  };
+  });
 
-  html2pdf().set(opt).from(source).save();
+  y += 10;
+
+  // Signature Box
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(12);
+  doc.text("TTD TEKNISI", startX + 10, y);
+  doc.text("TTD LEADER", startX + 75, y);
+  doc.text("TTD CALL CENTER", startX + 140, y);
+
+  y += 30;
+
+  doc.setDrawColor(0);
+  doc.rect(startX, y, 60, 30); // Teknisi
+  doc.rect(startX + 65, y, 60, 30); // Leader
+  doc.rect(startX + 130, y, 60, 30); // Call center
+
+  doc.save("Tanda_Terima_CM.pdf");
 }
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const inputFile = document.getElementById('multiPdf');
