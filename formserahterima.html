@@ -232,8 +232,7 @@
           filename: "Tanda_Terima_CM.pdf",
           image: { type: "jpeg", quality: 1 },
           html2canvas: { scale: 2, backgroundColor: "#ffffff", windowWidth: 800 },
-jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
-          jsPDF: { unit: "in", format: "a4", orientation: "portrait" }
+          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
         })
         .from(clone)
         .save()
