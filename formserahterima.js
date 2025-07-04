@@ -1,3 +1,5 @@
+// === formserahterima.js FINAL jsPDF STYLED TABLE ===
+
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
 
 let dataTabel = [];
@@ -74,9 +76,9 @@ async function prosesFile() {
 
 function tampilkanTabel() {
   const div = document.getElementById('tabelHasil');
-  const html = [`<div id="exportArea" style="font-family:Calibri,sans-serif; max-width:800px; margin:0 auto; padding:20px; background:#ffffff; color:#000;">
-    <h2 style="text-align:center; font-size:28px;">FORM TANDA TERIMA CM</h2>
-    <table border="1" cellspacing="0" cellpadding="8" style="width:100%; border-collapse:collapse; font-size:12px;">
+  const html = [`<div id="exportArea" style="font-family:Calibri; max-width:800px; margin:0 auto; padding:20px; background:#ffffff; color:#000000;">
+    <h2 style="text-align:center; font-size:28px; color:#000;">FORM TANDA TERIMA CM</h2>
+    <table border="1" cellspacing="0" cellpadding="8" style="width:100%; border-collapse:collapse; font-size:12px; color:#000; background:#fff;">
       <thead>
         <tr style="text-transform:uppercase; font-size:14px;">
           <th>No.</th>
@@ -87,24 +89,24 @@ function tampilkanTabel() {
       </thead>
       <tbody>` +
     dataTabel.map(row => `<tr>
-        <td style="text-align:center">${row.no}</td>
-        <td style="text-align:center">${row.tanggalSerah}</td>
-        <td>${row.namaUker}</td>
-        <td style="text-align:center">${row.tanggalPekerjaan}</td>
-      </tr>`).join('') +
+          <td>${row.no}</td>
+          <td>${row.tanggalSerah}</td>
+          <td>${row.namaUker}</td>
+          <td>${row.tanggalPekerjaan}</td>
+        </tr>`).join('') +
     `</tbody>
     </table>
     <br />
-    <table border="1" cellspacing="0" cellpadding="20" style="width:100%; text-align:center; font-size:14px;">
+    <table border="1" cellspacing="0" cellpadding="20" style="width:100%; text-align:center; font-size:14px; color:#000000; background:#ffffff;">
       <tr>
-        <th style="width:33.33%;">TTD TEKNISI</th>
-        <th style="width:33.33%;">TTD LEADER</th>
-        <th style="width:33.33%;">TTD CALL CENTER</th>
+        <th style="width:33.33%; color:#000; background:#fff;">TTD TEKNISI</th>
+        <th style="width:33.33%; color:#000; background:#fff;">TTD LEADER</th>
+        <th style="width:33.33%; color:#000; background:#fff;">TTD CALL CENTER</th>
       </tr>
-      <tr style="height:100px;">
-        <td></td>
-        <td></td>
-        <td></td>
+      <tr style="height:120px">
+        <td style="background:#fff;"></td>
+        <td style="background:#fff;"></td>
+        <td style="background:#fff;"></td>
       </tr>
     </table>
   </div>`];
@@ -112,49 +114,64 @@ function tampilkanTabel() {
 }
 
 function exportHTMLToPDF() {
-  const sourceEl = document.getElementById("exportArea");
-  if (!sourceEl) {
-    alert("Silakan klik 'Proses' terlebih dahulu.");
-    return;
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+  const pageWidth = doc.internal.pageSize.getWidth();
+  let y = 20;
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(18);
+  doc.text('FORM TANDA TERIMA CM', pageWidth / 2, y, { align: 'center' });
+
+  y += 10;
+  const headers = ['NO.', 'TANGGAL SERAH TERIMA', 'NAMA UKER', 'TANGGAL PEKERJAAN'];
+  const colWidths = [15, 40, 95, 40];
+  const startX = 10;
+
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'bold');
+  headers.forEach((text, i) => {
+    const x = startX + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + 1;
+    doc.text(text.toUpperCase(), x, y);
+  });
+
+  y += 5;
+  doc.setLineWidth(0.3);
+  doc.line(startX, y, pageWidth - startX, y); // underline header
+  y += 6;
+
+  doc.setFont('helvetica', 'normal');
+  dataTabel.forEach(row => {
+    const rowData = [row.no, row.tanggalSerah, row.namaUker, row.tanggalPekerjaan];
+    rowData.forEach((text, i) => {
+      const x = startX + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + 1;
+      doc.text(String(text), x, y);
+    });
+    y += 7;
+    if (y > 240) {
+      doc.addPage();
+      y = 20;
+    }
+  });
+
+  y += 12;
+  doc.setFont('helvetica', 'bold');
+  const boxW = 50;
+  const gap = 20;
+  const ttdX = [startX, startX + boxW + gap, startX + 2 * (boxW + gap)];
+
+  ['TTD TEKNISI', 'TTD LEADER', 'TTD CALL CENTER'].forEach((label, i) => {
+    doc.text(label, ttdX[i] + boxW / 2, y, { align: 'center' });
+  });
+
+  y += 5;
+  for (let i = 0; i < 3; i++) {
+    doc.rect(ttdX[i], y, boxW, 30);
   }
 
-  // Buat iframe tersembunyi
-  const iframe = document.createElement("iframe");
-  iframe.style.position = "fixed";
-  iframe.style.left = "-9999px";
-  document.body.appendChild(iframe);
-
-  const doc = iframe.contentWindow.document;
-  doc.open();
-  doc.write("<!DOCTYPE html><html><head><title>PDF</title>");
-  doc.write("<style>");
-  doc.write("body{font-family:Calibri,sans-serif;color:#000;background:#fff;padding:20px;}");
-  doc.write("table{border-collapse:collapse;width:100%;font-size:12px;}th,td{border:1px solid #000;padding:8px;text-align:center;}");
-  doc.write("th{text-transform:uppercase;font-size:14px;}");
-  doc.write("</style></head><body>");
-  doc.write(sourceEl.innerHTML);
-  doc.write("</body></html>");
-  doc.close();
-
-  iframe.onload = () => {
-    const iframeBody = iframe.contentWindow.document.body;
-    html2pdf()
-      .set({
-        margin: 0.5,
-        filename: "Tanda_Terima_CM.pdf",
-        image: { type: "jpeg", quality: 1 },
-        html2canvas: { scale: 2, backgroundColor: "#ffffff" },
-        jsPDF: { unit: "in", format: "a4", orientation: "portrait" }
-      })
-      .from(iframeBody)
-      .save()
-      .then(() => {
-        document.body.removeChild(iframe);
-      });
-  };
+  doc.save('Tanda_Terima_CM.pdf');
 }
-
-
 
 document.addEventListener('DOMContentLoaded', () => {
   const inputFile = document.getElementById('multiPdf');
