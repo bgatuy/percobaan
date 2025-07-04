@@ -1,4 +1,4 @@
-// === formserahterima.js FINAL EXPORT PDF DENGAN jsPDF NATIVE ===
+// === formserahterima.js FINAL jsPDF STYLED TABLE ===
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
 
@@ -125,43 +125,50 @@ function exportHTMLToPDF() {
   doc.text('FORM TANDA TERIMA CM', pageWidth / 2, y, { align: 'center' });
 
   y += 10;
-  const headers = ['No.', 'Tanggal Serah', 'Nama Uker', 'Tanggal Pekerjaan'];
+  const headers = ['NO.', 'TANGGAL SERAH TERIMA', 'NAMA UKER', 'TANGGAL PEKERJAAN'];
   const colWidths = [15, 40, 95, 40];
   const startX = 10;
 
   doc.setFontSize(12);
   doc.setFont('helvetica', 'bold');
   headers.forEach((text, i) => {
-    const x = startX + colWidths.slice(0, i).reduce((a, b) => a + b, 0);
-    doc.text(text, x, y);
+    const x = startX + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + 1;
+    doc.text(text.toUpperCase(), x, y);
   });
 
-  y += 7;
+  y += 5;
+  doc.setLineWidth(0.3);
+  doc.line(startX, y, pageWidth - startX, y); // underline header
+  y += 6;
+
   doc.setFont('helvetica', 'normal');
   dataTabel.forEach(row => {
     const rowData = [row.no, row.tanggalSerah, row.namaUker, row.tanggalPekerjaan];
     rowData.forEach((text, i) => {
-      const x = startX + colWidths.slice(0, i).reduce((a, b) => a + b, 0);
+      const x = startX + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + 1;
       doc.text(String(text), x, y);
     });
     y += 7;
-    if (y > 250) {
+    if (y > 240) {
       doc.addPage();
       y = 20;
     }
   });
 
-  y += 15;
+  y += 12;
   doc.setFont('helvetica', 'bold');
-  doc.text('TTD TEKNISI', 25, y);
-  doc.text('TTD LEADER', 90, y);
-  doc.text('TTD CALL CENTER', 150, y);
+  const boxW = 50;
+  const gap = 20;
+  const ttdX = [startX, startX + boxW + gap, startX + 2 * (boxW + gap)];
+
+  ['TTD TEKNISI', 'TTD LEADER', 'TTD CALL CENTER'].forEach((label, i) => {
+    doc.text(label, ttdX[i] + boxW / 2, y, { align: 'center' });
+  });
 
   y += 5;
-  doc.setDrawColor(0);
-  doc.rect(20, y, 50, 30);
-  doc.rect(85, y, 50, 30);
-  doc.rect(145, y, 50, 30);
+  for (let i = 0; i < 3; i++) {
+    doc.rect(ttdX[i], y, boxW, 30);
+  }
 
   doc.save('Tanda_Terima_CM.pdf');
 }
