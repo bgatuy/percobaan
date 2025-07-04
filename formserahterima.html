@@ -89,6 +89,44 @@
       text-transform: uppercase;
       background: #fff;
     }
+
+    @media (max-width: 768px) {
+  body {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  h1, h2 {
+    font-size: 20px;
+  }
+
+  input[type="date"],
+  .upload-label,
+  button {
+    width: 100%;
+    font-size: 16px;
+    margin-top: 6px;
+  }
+
+  #fileCount {
+    display: block;
+    margin-top: 6px;
+  }
+
+  #tabelHasil {
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 600px; /* agar scroll muncul */
+  }
+
+  th, td {
+    font-size: 12px;
+    white-space: nowrap;
+  }
+}
+
   </style>
 </head>
 <body>
