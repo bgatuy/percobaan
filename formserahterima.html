@@ -130,7 +130,7 @@
     pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js";
     let dataTabel = [];
 
- function extractFromPDFText(text) {
+function extractFromPDFText(text) {
   const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
   let namaUker = "";
 
@@ -190,6 +190,77 @@
 
   return { namaUker, tanggalPekerjaan: tanggalTiket };
 }
+
+// ======================== PDF EXPORT FINAL ==========================
+async function exportToPDF(dataTabel) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+  const margin = 40;
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const usableWidth = pageWidth - 2 * margin;
+
+  // Define column widths (total must not exceed usableWidth)
+  const colWidths = [40, 120, 270, 125];
+  const header = ["NO.", "TANGGAL SERAH TERIMA", "NAMA UKER", "TANGGAL PEKERJAAN"];
+
+  let y = 60;
+
+  doc.setFont("Helvetica", "bold");
+  doc.setFontSize(18);
+  doc.text("FORM TANDA TERIMA CM", pageWidth / 2, y, { align: 'center' });
+
+  y += 30;
+
+  doc.setFontSize(12);
+  doc.setFont("Helvetica", "bold");
+
+  // Header
+  let x = margin;
+  for (let i = 0; i < header.length; i++) {
+    doc.text(header[i], x + 2, y);
+    x += colWidths[i];
+  }
+
+  // Rows
+  y += 10;
+  doc.setFont("Helvetica", "normal");
+  dataTabel.forEach((row, idx) => {
+    const values = [String(row.no), row.tanggalSerah, row.namaUker, row.tanggalPekerjaan];
+    x = margin;
+    y += 18;
+    for (let i = 0; i < values.length; i++) {
+      doc.text(values[i], x + 2, y);
+      x += colWidths[i];
+    }
+  });
+
+  // Signature Section
+  y += 40;
+  const signHeaders = ["TTD TEKNISI", "TTD LEADER", "TTD CALL CENTER"];
+  const signBoxWidth = (usableWidth - 2) / 3;
+  const signBoxHeight = 80;
+
+  // Draw header
+  x = margin;
+  doc.setFont("Helvetica", "bold");
+  for (let i = 0; i < signHeaders.length; i++) {
+    doc.text(signHeaders[i], x + signBoxWidth / 2, y, { align: "center" });
+    x += signBoxWidth;
+  }
+
+  y += 5;
+
+  // Draw boxes
+  x = margin;
+  y += 5;
+  for (let i = 0; i < signHeaders.length; i++) {
+    doc.rect(x, y, signBoxWidth, signBoxHeight);
+    x += signBoxWidth;
+  }
+
+  doc.save("Tanda_Terima_CM.pdf");
+}
+
 
 
 
