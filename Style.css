@@ -332,3 +332,21 @@ body {
   }
 }
 
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #111;
+    color: #eee;
+  }
+
+  input, button, .upload-label {
+    background-color: #222;
+    color: #fff;
+    border-color: #555;
+  }
+
+  table, th, td {
+    border-color: #888;
+  }
+}
+
+
