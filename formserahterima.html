@@ -127,27 +127,31 @@
   </div>
 
   <script>
-    pdfjsLib.GlobalWorkerOptions.workerSrc =
-      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js";
-
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js";
     let dataTabel = [];
 
     function extractFromPDFText(text) {
       const lines = text.split('\n').map(line => line.trim());
-      let namaUker = "";
-      const startIndex = lines.findIndex(line => line.toLowerCase().startsWith("unit kerja"));
+      let namaUker = "Tidak ditemukan";
+      const startIndex = lines.findIndex(line => /unit kerja/i.test(line));
+
       if (startIndex !== -1) {
-        const match = lines[startIndex].match(/unit kerja\s*:\s*(.*)/i);
-        const collected = match && match[1] ? [match[1]] : [];
-        for (let i = startIndex + 1; i < lines.length; i++) {
-          if (/kantor cabang|tanggal|pelapor|jenis perangkat|asset id/i.test(lines[i])) break;
-          if (lines[i] !== "") collected.push(lines[i]);
+        const match = lines[startIndex].match(/unit kerja\s*[:\-]?\s*(.*)/i);
+        if (match && match[1]) {
+          namaUker = match[1];
+        } else if (lines[startIndex + 1]) {
+          namaUker = lines[startIndex + 1];
         }
-        namaUker = collected.join(" ").replace(/^:+\\s*/, "").trim();
       }
 
-      const tglMatch = text.match(/Tanggal Tiket\s*:\s*(\d{2}\/\d{2}\/\d{4})/);
-      const tanggalTiket = tglMatch ? tglMatch[1] : "";
+      let tanggalTiket = "";
+      const tanggalTiketMatch = text.match(/Tanggal.*?:\s*(\d{2}[\/\-]\d{2}[\/\-]\d{4})/);
+      if (tanggalTiketMatch) {
+        tanggalTiket = tanggalTiketMatch[1];
+      } else {
+        tanggalTiket = "Tidak ditemukan";
+      }
+
       return { namaUker, tanggalPekerjaan: tanggalTiket };
     }
 
@@ -167,7 +171,7 @@
         for (let j = 1; j <= pdf.numPages; j++) {
           const page = await pdf.getPage(j);
           const content = await page.getTextContent();
-          fullText += content.items.map(item => item.str).join("\\n");
+          fullText += content.items.map(item => item.str).join("\n");
         }
 
         const { namaUker, tanggalPekerjaan } = extractFromPDFText(fullText);
@@ -199,7 +203,7 @@
 
       div.innerHTML = `
         <div id="exportArea">
-          <h2 style="text-align:center; font-size:35px;">FORM TANDA TERIMA CM</h2>
+          <h2 style="text-align:center; font-size:22px;">FORM TANDA TERIMA CM</h2>
           <table>
             <thead>
               <tr>
