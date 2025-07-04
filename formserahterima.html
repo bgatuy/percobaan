@@ -131,35 +131,51 @@
     let dataTabel = [];
 
   function extractFromPDFText(text) {
-  const lines = text.split('\n').map(line => line.trim());
+  const lines = text.split('\n').map(line => line.trim()).filter(line => line !== '');
   let namaUker = "";
 
-  // Coba ambil dari baris yang mengandung 'unit kerja:' langsung
-  const ukerLine = lines.find(line => /unit\s*kerja\s*[:\-]/i.test(line));
+  // Coba ambil dari baris 'unit kerja: <isi>'
+  const ukerLine = lines.find(line => /unit\s*kerja\s*[:\-]\s*/i.test(line));
   if (ukerLine) {
     const match = ukerLine.match(/unit\s*kerja\s*[:\-]\s*(.*)/i);
     if (match && match[1]) {
       namaUker = match[1].trim();
     }
-  } else {
-    // Fallback: cari baris setelah baris 'unit kerja'
+  }
+
+  // Fallback: Ambil baris setelah 'unit kerja' (jika tidak ada `:`)
+  if (!namaUker) {
     const index = lines.findIndex(line => /unit\s*kerja/i.test(line));
-    if (index !== -1 && lines[index + 1]) {
-      namaUker = lines[index + 1].trim();
+    if (index !== -1) {
+      // Skip baris yang hanya berisi label, ambil yang berikutnya
+      for (let i = index + 1; i < lines.length; i++) {
+        if (!/unit\s*kerja/i.test(lines[i]) && lines[i]) {
+          namaUker = lines[i];
+          break;
+        }
+      }
     }
   }
 
+  // Fallback tambahan: cari pola umum nama uker (KC, KCP, UPT, divisi, dll.)
+  if (!namaUker) {
+    const fallbackLine = lines.find(line =>
+      /(divisi|departemen|kc\s|kcp|upt|unit|enterprise|data|finance|operation|management)/i.test(line)
+    );
+    if (fallbackLine) {
+      namaUker = fallbackLine.trim();
+    }
+  }
+
+  // Jika tetap kosong, fallback default
   if (!namaUker || /unit\s*kerja/i.test(namaUker)) {
     namaUker = "Tidak ditemukan";
   }
 
+  // --- Tanggal Pekerjaan ---
   let tanggalTiket = "";
   const tanggalTiketMatch = text.match(/Tanggal.*?:\s*(\d{2}[\/\-]\d{2}[\/\-]\d{4})/);
-  if (tanggalTiketMatch) {
-    tanggalTiket = tanggalTiketMatch[1];
-  } else {
-    tanggalTiket = "Tidak ditemukan";
-  }
+  tanggalTiket = tanggalTiketMatch ? tanggalTiketMatch[1] : "Tidak ditemukan";
 
   return { namaUker, tanggalPekerjaan: tanggalTiket };
 }
