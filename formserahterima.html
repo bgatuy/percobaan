@@ -5,51 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Form Tanda Terima CM</title>
 
-  <!-- Fonts & Icons -->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-
-  <!-- Library -->
+  <!-- PDF.js for reading PDFs -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
+  <!-- html2pdf for exporting HTML to PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <!-- ✅ Favicon ditambahkan di sini -->
-  <link rel="icon" href="https://api.iconify.design/mdi:file-document.svg" type="image/svg+xml" />
 
-  <!-- Style dan ikon -->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
-
-  <!-- CSS -->
   <style>
     body {
       font-family: Calibri, sans-serif;
-      padding: 20px;
-      background-color: #fff;
+      background-color: #f8f8f8;
       color: #000;
       text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    .input-row {
+      margin-bottom: 10px;
+    }
+
+    input[type="date"] {
+      padding: 8px 12px;
+      font-size: 16px;
+      border: 2px solid #ccc;
+      border-radius: 6px;
     }
 
     .upload-label {
-      display: inline-block;
       background-color: #007bff;
       color: white;
-      padding: 10px 18px;
+      padding: 10px 16px;
       border-radius: 6px;
-      font-size: 16px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      display: inline-block;
     }
 
     .upload-label:hover {
       background-color: #0056b3;
     }
 
-    .material-icons {
-      font-size: 18px;
-      margin-right: 6px;
-      vertical-align: middle;
+    input[type="file"] {
+      display: none;
     }
 
     button {
@@ -60,86 +59,61 @@
       border: none;
       border-radius: 6px;
       cursor: pointer;
-      margin: 8px 4px;
+      margin: 10px 4px;
     }
 
-    #tabelHasil {
-      margin-top: 30px;
+    button:hover {
+      background-color: #0056b3;
     }
 
-    @media (prefers-color-scheme: dark) {
-      body { background: #121212; color: #ffffff; }
-      .upload-label, button { background-color: #1e88e5; color: white; }
-      .upload-label:hover, button:hover { background-color: #1565c0; }
-      table, th, td { color: #ffffff !important; background: #1e1e1e !important; border-color: #444; }
-      input[type="date"] { background: #2c2c2c; color: white; border: 1px solid #555; }
+    #fileCount {
+      margin-left: 10px;
+      font-weight: bold;
+      vertical-align: middle;
     }
 
-    @media (max-width: 600px) {
-      h1 { font-size: 24px !important; }
-      .upload-label { width: 100%; font-size: 16px; }
-      #fileCount { display: block; text-align: center; margin-top: 6px; }
-      table { font-size: 12px !important; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
     }
 
-    @media (max-width: 600px) {
-  table, th, td {
-    font-size: 12px !important;
-    word-break: break-word;
-  }
+    th, td {
+      border: 1px solid #000;
+      padding: 8px;
+      font-size: 12px;
+    }
 
-  table {
-    width: 100% !important;
-  }
-
-  .button-row {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .upload-label {
-    width: 100%;
-    text-align: center;
-  }
-
-  #fileCount {
-    text-align: center;
-    display: block;
-  }
-}
-
+    th {
+      font-size: 14px;
+      text-transform: uppercase;
+      background: #fff;
+    }
   </style>
 </head>
 <body>
- <nav style="margin-bottom: 20px; text-align:center; color: #007bff;">
-    <a href="index.html" style="color: #007bff; text-decoration;">Extract PDF</a> |
-    <a href="formserahterima.html" style="color: #007bff; text-decoration;">Buat Form Serah Terima</a> |
-    <a href="merge.html" style="color: #007bff; text-decoration;">Merge PDF</a>
- </nav>
-  
+
   <h1>Form Tanda Terima CM</h1>
 
-  <label for="tanggalSerah">Input Tanggal Serah Terima:</label>
-  <input type="date" id="tanggalSerah" />
-
-  <br /><br />
-
-  <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
-    <label for="multiPdf" class="upload-label">
-      <span class="material-icons">upload_file</span> Pilih File PDF
-    </label>
-    <span id="fileCount" style="font-size: 14px;"></span>
+  <div class="input-row">
+    <label for="tanggalSerah">Input Tanggal Serah Terima:</label>
+    <input type="date" id="tanggalSerah" />
   </div>
 
-  <input type="file" id="multiPdf" multiple accept="application/pdf" style="display: none;" />
+  <label for="multiPdf" class="upload-label">
+    📄 Pilih File PDF
+  </label>
+  <input type="file" id="multiPdf" multiple accept="application/pdf" />
+  <span id="fileCount"></span>
 
   <br />
   <button onclick="prosesFile()">Proses</button>
-  <button id="downloadBtn" style="display:none">Download PDF</button>
+  <button id="downloadBtn" style="display:none;">Download PDF</button>
 
   <div id="tabelHasil"></div>
 
+  <!-- Skrip Utama -->
   <script src="formserahterima.js"></script>
+
 </body>
 </html>
