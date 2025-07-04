@@ -168,7 +168,7 @@
 
     function tampilkanTabel() {
       const div = document.getElementById('tabelHasil');
-      const html = `<div id="exportArea" style="font-family:Calibri; background:#fff; color:#000;">
+      const html = `<div id="exportArea" style="font-family:Calibri; background:#fff; color:#000; max-width:800px; margin:auto;">
         <h2 style="text-align:center; font-size:35px;">FORM TANDA TERIMA CM</h2>
         <table border="1" cellspacing="0" cellpadding="6" style="width:100%;">
           <thead>
@@ -189,16 +189,13 @@
           </tbody>
         </table>
         <br>
-        <table border="1" cellspacing="0" cellpadding="20" style="width:100%; text-align:center; table-layout:fixed;">
-          <colgroup>
-            <col style="width: 33.3%;">
-            <col style="width: 33.3%;">
-            <col style="width: 33.3%;">
-          </colgroup>
+        <table border="1" cellspacing="0" cellpadding="6" style="width:100%; text-align:center;">
           <tr>
-            <th>TTD TEKNISI</th><th>TTD LEADER</th><th>TTD CALL CENTER</th>
+            <th style="width:33.33%">TTD TEKNISI</th>
+            <th style="width:33.33%">TTD LEADER</th>
+            <th style="width:33.33%">TTD CALL CENTER</th>
           </tr>
-          <tr style="height:100px;">
+          <tr style="height:125px;">
             <td></td><td></td><td></td>
           </tr>
         </table>
