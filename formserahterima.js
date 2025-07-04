@@ -1,4 +1,4 @@
-// === formserahterima.js FINAL FIX LIGHTMODE PDF ===
+// === formserahterima.js FINAL FIX LIGHTMODE PDF STABLE ===
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
 
@@ -116,31 +116,14 @@ function tampilkanTabel() {
 function exportHTMLToPDF() {
   const source = document.getElementById('exportArea');
 
-  // 1. Buat salinan DOM
-  const clone = source.cloneNode(true);
-  clone.style.backgroundColor = '#ffffff';
-  clone.style.color = '#000000';
-
-  // 2. Paksa gaya light mode di elemen
-  clone.querySelectorAll('*').forEach(el => {
-    el.style.backgroundColor = '#ffffff';
-    el.style.color = '#000000';
-    el.style.borderColor = '#000000';
-  });
-
-  // 3. Sisipkan clone ke dalam body (tapi hidden)
-  clone.style.position = 'absolute';
-  clone.style.left = '-9999px';
-  document.body.appendChild(clone);
-
-  // 4. Konfigurasi PDF
   const opt = {
     margin: 0.3,
     filename: 'Tanda_Terima_CM.pdf',
     image: { type: 'jpeg', quality: 1 },
     html2canvas: {
       scale: 2,
-      backgroundColor: '#ffffff'
+      backgroundColor: '#ffffff',
+      ignoreElements: (el) => el.tagName === 'SCRIPT'
     },
     jsPDF: {
       unit: 'in',
@@ -149,12 +132,8 @@ function exportHTMLToPDF() {
     }
   };
 
-  // 5. Ekspor dari clone, lalu hapus clone
-  html2pdf().set(opt).from(clone).save().then(() => {
-    document.body.removeChild(clone); // Bersihkan
-  });
+  html2pdf().set(opt).from(source).save();
 }
-
 
 document.addEventListener('DOMContentLoaded', () => {
   const inputFile = document.getElementById('multiPdf');
