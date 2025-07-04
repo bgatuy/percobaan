@@ -112,64 +112,48 @@ function tampilkanTabel() {
 }
 
 function exportHTMLToPDF() {
-  const source = document.getElementById("exportArea");
-
-  if (!source) {
-    alert("Silakan klik tombol 'Proses' terlebih dahulu.");
+  const sourceEl = document.getElementById("exportArea");
+  if (!sourceEl) {
+    alert("Silakan klik 'Proses' terlebih dahulu.");
     return;
   }
 
-  // Buat clone & pembungkus agar tidak render langsung dari UI
-  const clone = source.cloneNode(true);
-  const wrapper = document.createElement("div");
-  wrapper.appendChild(clone);
+  // Buat iframe tersembunyi
+  const iframe = document.createElement("iframe");
+  iframe.style.position = "fixed";
+  iframe.style.left = "-9999px";
+  document.body.appendChild(iframe);
 
-  // Pastikan tampil terang dan readable
-  wrapper.style.backgroundColor = "#ffffff";
-  wrapper.style.color = "#000000";
-  wrapper.style.fontFamily = "Calibri, sans-serif";
-  wrapper.style.padding = "20px";
-  wrapper.style.width = "210mm";
-  wrapper.style.maxWidth = "210mm";
+  const doc = iframe.contentWindow.document;
+  doc.open();
+  doc.write("<!DOCTYPE html><html><head><title>PDF</title>");
+  doc.write("<style>");
+  doc.write("body{font-family:Calibri,sans-serif;color:#000;background:#fff;padding:20px;}");
+  doc.write("table{border-collapse:collapse;width:100%;font-size:12px;}th,td{border:1px solid #000;padding:8px;text-align:center;}");
+  doc.write("th{text-transform:uppercase;font-size:14px;}");
+  doc.write("</style></head><body>");
+  doc.write(sourceEl.innerHTML);
+  doc.write("</body></html>");
+  doc.close();
 
-  // Terapkan ke semua anak elemen
-  wrapper.querySelectorAll("*").forEach(el => {
-    el.style.backgroundColor = "#ffffff";
-    el.style.color = "#000000";
-    el.style.borderColor = "#000000";
-    el.style.fontFamily = "Calibri, sans-serif";
-  });
-
-  // Tempel ke body agar bisa dirender
-  wrapper.style.position = "fixed";
-  wrapper.style.left = "-9999px";
-  wrapper.style.top = "0";
-  document.body.appendChild(wrapper);
-
-  // Jalankan html2pdf
-  setTimeout(() => {
+  iframe.onload = () => {
+    const iframeBody = iframe.contentWindow.document.body;
     html2pdf()
       .set({
         margin: 0.5,
         filename: "Tanda_Terima_CM.pdf",
         image: { type: "jpeg", quality: 1 },
-        html2canvas: {
-          scale: 2,
-          backgroundColor: "#ffffff",
-        },
-        jsPDF: {
-          unit: "in",
-          format: "a4",
-          orientation: "portrait"
-        }
+        html2canvas: { scale: 2, backgroundColor: "#ffffff" },
+        jsPDF: { unit: "in", format: "a4", orientation: "portrait" }
       })
-      .from(wrapper)
+      .from(iframeBody)
       .save()
       .then(() => {
-        document.body.removeChild(wrapper);
+        document.body.removeChild(iframe);
       });
-  }, 300); // beri jeda agar DOM benar-benar render
+  };
 }
+
 
 
 document.addEventListener('DOMContentLoaded', () => {
