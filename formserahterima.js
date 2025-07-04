@@ -114,18 +114,26 @@ function tampilkanTabel() {
 }
 
 function exportHTMLToPDF() {
-  const original = document.getElementById('exportArea');
-  const clone = original.cloneNode(true);
+  const source = document.getElementById('exportArea');
 
-  clone.style.color = '#000';
-  clone.style.backgroundColor = '#fff';
+  // 1. Buat salinan DOM
+  const clone = source.cloneNode(true);
+  clone.style.backgroundColor = '#ffffff';
+  clone.style.color = '#000000';
 
+  // 2. Paksa gaya light mode di elemen
   clone.querySelectorAll('*').forEach(el => {
-    el.style.backgroundColor = '#fff';
-    el.style.color = '#000';
-    el.style.borderColor = '#000';
+    el.style.backgroundColor = '#ffffff';
+    el.style.color = '#000000';
+    el.style.borderColor = '#000000';
   });
 
+  // 3. Sisipkan clone ke dalam body (tapi hidden)
+  clone.style.position = 'absolute';
+  clone.style.left = '-9999px';
+  document.body.appendChild(clone);
+
+  // 4. Konfigurasi PDF
   const opt = {
     margin: 0.3,
     filename: 'Tanda_Terima_CM.pdf',
@@ -140,8 +148,13 @@ function exportHTMLToPDF() {
       orientation: 'portrait'
     }
   };
-  html2pdf().set(opt).from(clone).save();
+
+  // 5. Ekspor dari clone, lalu hapus clone
+  html2pdf().set(opt).from(clone).save().then(() => {
+    document.body.removeChild(clone); // Bersihkan
+  });
 }
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const inputFile = document.getElementById('multiPdf');
