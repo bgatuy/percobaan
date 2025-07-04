@@ -161,13 +161,21 @@
     }
   }
 
-  // 3. Fallback: cari nama uker berdasarkan kata kunci umum
+  // 3. Fallback: cari nama uker berdasarkan kata kunci umum (gabungkan beberapa baris jika memungkinkan)
   if (!namaUker) {
-    const keywordLine = lines.find(line =>
+    const keywordIndex = lines.findIndex(line =>
       /(BRI|ENTERPRISE|SYNDICATION|MANAGEMENT|LOGISTIC|CORPORATE|ACCOUNTING|TRANSFORMATION|PROCUREMENT)/i.test(line)
     );
-    if (keywordLine) {
-      namaUker = keywordLine.replace(/^[:\s]+/, '').trim();
+    if (keywordIndex !== -1) {
+      const collected = [];
+      for (let i = keywordIndex; i < lines.length; i++) {
+        const line = lines[i];
+        if (/^(tanggal|pelapor|jenis perangkat|asset id|kantor cabang)/i.test(line)) break;
+        collected.push(line);
+      }
+      if (collected.length) {
+        namaUker = collected.join(' ').replace(/^[:\s]+/, '').trim();
+      }
     }
   }
 
