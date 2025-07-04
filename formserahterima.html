@@ -3,133 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="color-scheme" content="light dark">
-
+  <meta name="color-scheme" content="light dark" />
   <title>Form Tanda Terima CM</title>
 
-  <!-- PDF.js for reading PDFs -->
+  <!-- Libs -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
-  <!-- html2pdf for exporting HTML to PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-  <style>
-    body {
-      font-family: Calibri, sans-serif;
-      background-color: #f8f8f8;
-      color: #000;
-      text-align: center;
-      padding: 20px;
-    }
-
-    h1 {
-      margin-bottom: 10px;
-    }
-
-    .input-row {
-      margin-bottom: 10px;
-    }
-
-    input[type="date"] {
-      padding: 8px 12px;
-      font-size: 16px;
-      border: 2px solid #ccc;
-      border-radius: 6px;
-    }
-
-    .upload-label {
-      background-color: #007bff;
-      color: white;
-      padding: 10px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      display: inline-block;
-    }
-
-    .upload-label:hover {
-      background-color: #0056b3;
-    }
-
-    input[type="file"] {
-      display: none;
-    }
-
-    button {
-      background-color: #007bff;
-      color: white;
-      padding: 10px 16px;
-      font-size: 16px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      margin: 10px 4px;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    #fileCount {
-      margin-left: 10px;
-      font-weight: bold;
-      vertical-align: middle;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    th, td {
-      border: 1px solid #000;
-      padding: 8px;
-      font-size: 12px;
-    }
-
-    th {
-      font-size: 14px;
-      text-transform: uppercase;
-      background: #fff;
-    }
-
-    @media (max-width: 768px) {
-  body {
-    padding: 10px;
-    font-size: 14px;
-  }
-
-  h1, h2 {
-    font-size: 20px;
-  }
-
-  input[type="date"],
-  .upload-label,
-  button {
-    width: 100%;
-    font-size: 16px;
-    margin-top: 6px;
-  }
-
-  #fileCount {
-    display: block;
-    margin-top: 6px;
-  }
-
-  #tabelHasil {
-    overflow-x: auto;
-  }
-
-  table {
-    min-width: 600px; /* agar scroll muncul */
-  }
-
-  th, td {
-    font-size: 12px;
-    white-space: nowrap;
-  }
-}
-
-  </style>
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
@@ -140,9 +22,7 @@
     <input type="date" id="tanggalSerah" />
   </div>
 
-  <label for="multiPdf" class="upload-label">
-    📄 Pilih File PDF
-  </label>
+  <label for="multiPdf" class="upload-label">📄 Pilih File PDF</label>
   <input type="file" id="multiPdf" multiple accept="application/pdf" />
   <span id="fileCount"></span>
 
@@ -151,12 +31,7 @@
   <button id="downloadBtn" style="display:none;">Download PDF</button>
 
   <div id="tabelHasil"></div>
-  <div id="exportArea">
-</div>
 
-
-  <!-- Skrip Utama -->
   <script src="formserahterima.js"></script>
-
 </body>
 </html>
