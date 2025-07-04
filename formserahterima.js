@@ -114,63 +114,45 @@ function tampilkanTabel() {
 }
 
 function exportHTMLToPDF() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-
-  const pageWidth = doc.internal.pageSize.getWidth();
-  let y = 20;
-
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(18);
-  doc.text('FORM TANDA TERIMA CM', pageWidth / 2, y, { align: 'center' });
-
-  y += 10;
-  const headers = ['NO.', 'TANGGAL SERAH TERIMA', 'NAMA UKER', 'TANGGAL PEKERJAAN'];
-  const colWidths = [15, 40, 95, 40];
-  const startX = 10;
-
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'bold');
-  headers.forEach((text, i) => {
-    const x = startX + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + 1;
-    doc.text(text.toUpperCase(), x, y);
-  });
-
-  y += 5;
-  doc.setLineWidth(0.3);
-  doc.line(startX, y, pageWidth - startX, y); // underline header
-  y += 6;
-
-  doc.setFont('helvetica', 'normal');
-  dataTabel.forEach(row => {
-    const rowData = [row.no, row.tanggalSerah, row.namaUker, row.tanggalPekerjaan];
-    rowData.forEach((text, i) => {
-      const x = startX + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + 1;
-      doc.text(String(text), x, y);
-    });
-    y += 7;
-    if (y > 240) {
-      doc.addPage();
-      y = 20;
-    }
-  });
-
-  y += 12;
-  doc.setFont('helvetica', 'bold');
-  const boxW = 50;
-  const gap = 20;
-  const ttdX = [startX, startX + boxW + gap, startX + 2 * (boxW + gap)];
-
-  ['TTD TEKNISI', 'TTD LEADER', 'TTD CALL CENTER'].forEach((label, i) => {
-    doc.text(label, ttdX[i] + boxW / 2, y, { align: 'center' });
-  });
-
-  y += 5;
-  for (let i = 0; i < 3; i++) {
-    doc.rect(ttdX[i], y, boxW, 30);
+  const sourceEl = document.getElementById("exportArea");
+  if (!sourceEl) {
+    alert("Silakan klik 'Proses' terlebih dahulu.");
+    return;
   }
 
-  doc.save('Tanda_Terima_CM.pdf');
+  const iframe = document.createElement("iframe");
+  iframe.style.position = "fixed";
+  iframe.style.left = "-9999px";
+  document.body.appendChild(iframe);
+
+  const doc = iframe.contentWindow.document;
+  doc.open();
+  doc.write("<!DOCTYPE html><html><head><title>PDF</title>");
+  doc.write("<style>");
+  doc.write("body{font-family:Calibri,sans-serif;color:#000;background:#fff;padding:20px;}");
+  doc.write("table{border-collapse:collapse;width:100%;font-size:12px;}th,td{border:1px solid #000;padding:8px;text-align:center;}");
+  doc.write("th{text-transform:uppercase;font-size:14px;}");
+  doc.write("</style></head><body>");
+  doc.write(sourceEl.innerHTML);
+  doc.write("</body></html>");
+  doc.close();
+
+  iframe.onload = () => {
+    const iframeBody = iframe.contentWindow.document.body;
+    html2pdf()
+      .set({
+        margin: 0.7,
+        filename: "Tanda_Terima_CM.pdf",
+        image: { type: "jpeg", quality: 1 },
+        html2canvas: { scale: 2, backgroundColor: "#ffffff" },
+        jsPDF: { unit: "in", format: "a4", orientation: "portrait" }
+      })
+      .from(iframeBody)
+      .save()
+      .then(() => {
+        document.body.removeChild(iframe);
+      });
+  };
 }
 
 document.addEventListener('DOMContentLoaded', () => {
