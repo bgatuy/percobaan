@@ -130,7 +130,7 @@
     pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js";
     let dataTabel = [];
 
-  function extractFromPDFText(text) {
+ function extractFromPDFText(text) {
   const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
   let namaUker = "";
 
@@ -159,7 +159,7 @@
   // 3. Fallback: cari nama uker berdasarkan kata kunci umum
   if (!namaUker) {
     const keywordLine = lines.find(line =>
-      /(BRI|ENTERPRISE|DATA MANAGEMENT|SYNDICATION|PROCUREMENT|FINANCE|OPERATION|LOGISTIC|CORPORATE|ACCOUNTING|TRANSFORMATION)/i.test(line)
+      /(BRI|ENTERPRISE|SYNDICATION|MANAGEMENT|LOGISTIC|CORPORATE|ACCOUNTING|TRANSFORMATION|PROCUREMENT)/i.test(line)
     );
     if (keywordLine) {
       namaUker = keywordLine.replace(/^[:\s]+/, '').trim();
@@ -177,6 +177,7 @@
 
   return { namaUker, tanggalPekerjaan: tanggalTiket };
 }
+
 
 
     async function prosesFile() {
