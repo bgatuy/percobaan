@@ -112,24 +112,27 @@ function tampilkanTabel() {
 }
 
 function exportHTMLToPDF() {
-  const original = document.getElementById("exportArea");
-  if (!original) {
-    alert("Tabel belum dibuat. Klik tombol Proses dulu.");
+  const source = document.getElementById("exportArea");
+
+  if (!source) {
+    alert("Silakan klik tombol 'Proses' terlebih dahulu.");
     return;
   }
 
-  // Clone node
-  const clone = original.cloneNode(true);
+  // Buat clone & pembungkus agar tidak render langsung dari UI
+  const clone = source.cloneNode(true);
   const wrapper = document.createElement("div");
   wrapper.appendChild(clone);
 
-  // Paksa light style
+  // Pastikan tampil terang dan readable
   wrapper.style.backgroundColor = "#ffffff";
   wrapper.style.color = "#000000";
   wrapper.style.fontFamily = "Calibri, sans-serif";
   wrapper.style.padding = "20px";
+  wrapper.style.width = "210mm";
+  wrapper.style.maxWidth = "210mm";
 
-  // Terapkan ke semua anak
+  // Terapkan ke semua anak elemen
   wrapper.querySelectorAll("*").forEach(el => {
     el.style.backgroundColor = "#ffffff";
     el.style.color = "#000000";
@@ -137,15 +140,13 @@ function exportHTMLToPDF() {
     el.style.fontFamily = "Calibri, sans-serif";
   });
 
-  // Tampilkan elemen sebelum convert (tapi di luar layar)
+  // Tempel ke body agar bisa dirender
   wrapper.style.position = "fixed";
   wrapper.style.left = "-9999px";
   wrapper.style.top = "0";
-  wrapper.style.width = "210mm";
-  wrapper.style.maxWidth = "210mm";
   document.body.appendChild(wrapper);
 
-  // Delay agar DOM siap render
+  // Jalankan html2pdf
   setTimeout(() => {
     html2pdf()
       .set({
@@ -156,14 +157,18 @@ function exportHTMLToPDF() {
           scale: 2,
           backgroundColor: "#ffffff",
         },
-        jsPDF: { unit: "in", format: "a4", orientation: "portrait" }
+        jsPDF: {
+          unit: "in",
+          format: "a4",
+          orientation: "portrait"
+        }
       })
       .from(wrapper)
       .save()
       .then(() => {
         document.body.removeChild(wrapper);
       });
-  }, 100);
+  }, 300); // beri jeda agar DOM benar-benar render
 }
 
 
