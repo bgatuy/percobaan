@@ -130,30 +130,36 @@
     pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js";
     let dataTabel = [];
 
-    function extractFromPDFText(text) {
-      const lines = text.split('\n').map(line => line.trim());
-      let namaUker = "Tidak ditemukan";
-      const startIndex = lines.findIndex(line => /unit kerja/i.test(line));
+   function extractFromPDFText(text) {
+  const lines = text.split('\n').map(line => line.trim());
+  let namaUker = "";
 
-      if (startIndex !== -1) {
-        const match = lines[startIndex].match(/unit kerja\s*[:\-]?\s*(.*)/i);
-        if (match && match[1]) {
-          namaUker = match[1];
-        } else if (lines[startIndex + 1]) {
-          namaUker = lines[startIndex + 1];
-        }
-      }
+  // Prioritas 1: cari baris mengandung 'unit kerja'
+  const lineWithUker = lines.find(line => /unit\s*kerja/i.test(line));
+  if (lineWithUker) {
+    const match = lineWithUker.match(/unit\s*kerja\s*[:\-]?\s*(.*)/i);
+    namaUker = match && match[1] ? match[1].trim() : lineWithUker;
+  }
 
-      let tanggalTiket = "";
-      const tanggalTiketMatch = text.match(/Tanggal.*?:\s*(\d{2}[\/\-]\d{2}[\/\-]\d{4})/);
-      if (tanggalTiketMatch) {
-        tanggalTiket = tanggalTiketMatch[1];
-      } else {
-        tanggalTiket = "Tidak ditemukan";
-      }
+  // Prioritas 2: fallback cari baris dengan 'kantor cabang' atau 'kcp'
+  if (!namaUker) {
+    const fallback = lines.find(line =>
+      /(kantor\s*cabang|kcp|upt|unit pelayanan|cabang|kc\s+)/i.test(line)
+    );
+    if (fallback) namaUker = fallback.trim();
+  }
 
-      return { namaUker, tanggalPekerjaan: tanggalTiket };
-    }
+  // Jika tetap kosong
+  if (!namaUker) namaUker = "Tidak ditemukan";
+
+  // --- Tanggal Pekerjaan ---
+  let tanggalTiket = "";
+  const tanggalTiketMatch = text.match(/Tanggal.*?:\s*(\d{2}[\/\-]\d{2}[\/\-]\d{4})/);
+  tanggalTiket = tanggalTiketMatch ? tanggalTiketMatch[1] : "Tidak ditemukan";
+
+  return { namaUker, tanggalPekerjaan: tanggalTiket };
+}
+
 
     async function prosesFile() {
       const files = document.getElementById("multiPdf").files;
