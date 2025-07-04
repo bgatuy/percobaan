@@ -170,7 +170,7 @@
       const div = document.getElementById('tabelHasil');
       const html = `<div id="exportArea" style="font-family:Calibri; background:#fff; color:#000;">
         <h2 style="text-align:center; font-size:35px;">FORM TANDA TERIMA CM</h2>
-        <table border="1" cellspacing="0" cellpadding="20" style="width:100%; text-align:center;">
+        <table border="1" cellspacing="0" cellpadding="6" style="width:100%;">
           <thead>
             <tr style="font-weight:bold; text-transform:uppercase;">
               <th>No.</th>
@@ -189,7 +189,7 @@
           </tbody>
         </table>
         <br>
-        <table border="1" cellspacing="0" cellpadding="20" style="width:100%; text-align:center; table-layout:fixed;">
+        <table border="1" cellspacing="0" cellpadding="20" style="width:100%; text-align:center;">
           <colgroup>
             <col style="width: 33.33%;">
             <col style="width: 33.33%;">
@@ -198,7 +198,7 @@
           <tr>
             <th>TTD TEKNISI</th><th>TTD LEADER</th><th>TTD CALL CENTER</th>
           </tr>
-          <tr style="height:125px;">
+          <tr style="height:100px;">
             <td></td><td></td><td></td>
           </tr>
         </table>
@@ -231,7 +231,8 @@
           margin: 0.5,
           filename: "Tanda_Terima_CM.pdf",
           image: { type: "jpeg", quality: 1 },
-          html2canvas: { scale: 2, backgroundColor: "#ffffff" },
+          html2canvas: { scale: 2, backgroundColor: "#ffffff", windowWidth: 800 },
+jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
           jsPDF: { unit: "in", format: "a4", orientation: "portrait" }
         })
         .from(clone)
