@@ -106,7 +106,7 @@
           if (/kantor cabang|tanggal|pelapor|jenis perangkat|asset id/i.test(line)) break;
           if (line !== '') collected.push(line);
         }
-        namaUker = collected.join(' ').trim();
+        namaUker = collected.join(' ').replace(/^:+\s*/, '').trim();
       }
 
       const tanggalTiketMatch = text.match(/Tanggal Tiket\s*:\s*(\d{2}\/\d{2}\/\d{4})/);
@@ -150,7 +150,7 @@
         <h2 style="text-align:center; font-size:22px;">FORM TANDA TERIMA CM</h2>
         <table border="1" cellspacing="0" cellpadding="6" style="width:100%;">
           <thead>
-            <tr style="font-weight:bold;">
+            <tr style="font-weight:bold; text-transform:uppercase;">
               <th>No.</th>
               <th>Tanggal Serah Terima</th>
               <th>Nama Uker</th>
@@ -167,11 +167,16 @@
           </tbody>
         </table>
         <br>
-        <table border="1" cellspacing="0" cellpadding="20" style="width:100%; text-align:center;">
+        <table border="1" cellspacing="0" cellpadding="6" style="width:100%; text-align:center; table-layout:fixed;">
+          <colgroup>
+            <col style="width: 33.33%;">
+            <col style="width: 33.33%;">
+            <col style="width: 33.33%;">
+          </colgroup>
           <tr>
             <th>TTD TEKNISI</th><th>TTD LEADER</th><th>TTD CALL CENTER</th>
           </tr>
-          <tr style="height:100px;">
+          <tr style="height:125px;">
             <td></td><td></td><td></td>
           </tr>
         </table>
