@@ -131,38 +131,53 @@
     let dataTabel = [];
 
   function extractFromPDFText(text) {
-  const lines = text.split('\n').map(line => line.trim());
+  const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
   let namaUker = "";
 
-  // Coba ambil dari baris yang mengandung 'unit kerja:' langsung
+  // 1. Coba cari dari baris dengan 'unit kerja:'
   const ukerLine = lines.find(line => /unit\s*kerja\s*[:\-]/i.test(line));
   if (ukerLine) {
     const match = ukerLine.match(/unit\s*kerja\s*[:\-]\s*(.*)/i);
     if (match && match[1]) {
       namaUker = match[1].replace(/^[:\s]+/, '').trim();
     }
-  } else {
-    // Fallback: cari baris setelah baris 'unit kerja'
+  }
+
+  // 2. Fallback: baris setelah 'unit kerja'
+  if (!namaUker) {
     const index = lines.findIndex(line => /unit\s*kerja/i.test(line));
-    if (index !== -1 && lines[index + 1]) {
-      namaUker = lines[index + 1].replace(/^[:\s]+/, '').trim();
+    if (index !== -1) {
+      for (let i = index + 1; i < lines.length; i++) {
+        if (lines[i] && !/unit\s*kerja/i.test(lines[i])) {
+          namaUker = lines[i].replace(/^[:\s]+/, '').trim();
+          break;
+        }
+      }
     }
   }
 
-  if (!namaUker || /unit\s*kerja/i.test(namaUker)) {
+  // 3. Fallback: cari nama uker berdasarkan kata kunci umum
+  if (!namaUker) {
+    const keywordLine = lines.find(line =>
+      /(BRI|ENTERPRISE|DATA MANAGEMENT|SYNDICATION|PROCUREMENT|FINANCE|OPERATION|LOGISTIC|CORPORATE|ACCOUNTING|TRANSFORMATION)/i.test(line)
+    );
+    if (keywordLine) {
+      namaUker = keywordLine.replace(/^[:\s]+/, '').trim();
+    }
+  }
+
+  if (!namaUker) {
     namaUker = "Tidak ditemukan";
   }
 
+  // Tanggal Pekerjaan
   let tanggalTiket = "";
   const tanggalTiketMatch = text.match(/Tanggal.*?:\s*(\d{2}[\/\-]\d{2}[\/\-]\d{4})/);
-  if (tanggalTiketMatch) {
-    tanggalTiket = tanggalTiketMatch[1];
-  } else {
-    tanggalTiket = "Tidak ditemukan";
-  }
+  tanggalTiket = tanggalTiketMatch ? tanggalTiketMatch[1] : "Tidak ditemukan";
 
   return { namaUker, tanggalPekerjaan: tanggalTiket };
 }
+
 
     async function prosesFile() {
       const files = document.getElementById("multiPdf").files;
