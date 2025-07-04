@@ -137,7 +137,7 @@
       let namaUker = "";
       const startIndex = lines.findIndex(line => line.toLowerCase().startsWith("unit kerja"));
       if (startIndex !== -1) {
-        const tglMatch = text.match(/Tanggal Tiket\s*:\s*(\d{2}\/\d{2}\/\d{4})/);
+        const match = lines[startIndex].match(/unit kerja\s*:\s*(.*)/i);
         const collected = match && match[1] ? [match[1]] : [];
         for (let i = startIndex + 1; i < lines.length; i++) {
           if (/kantor cabang|tanggal|pelapor|jenis perangkat|asset id/i.test(lines[i])) break;
@@ -146,7 +146,7 @@
         namaUker = collected.join(" ").replace(/^:+\\s*/, "").trim();
       }
 
-      const tglMatch = text.match(/Tanggal Tiket\\s*:\\s*(\\d{2}\\/\\d{2}\\/\\d{4})/);
+      const tglMatch = text.match(/Tanggal Tiket\s*:\s*(\d{2}\/\d{2}\/\d{4})/);
       const tanggalTiket = tglMatch ? tglMatch[1] : "";
       return { namaUker, tanggalPekerjaan: tanggalTiket };
     }
