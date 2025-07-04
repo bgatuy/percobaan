@@ -113,36 +113,59 @@ function tampilkanTabel() {
 
 function exportHTMLToPDF() {
   const original = document.getElementById("exportArea");
+  if (!original) {
+    alert("Tabel belum dibuat. Klik tombol Proses dulu.");
+    return;
+  }
+
+  // Clone node
   const clone = original.cloneNode(true);
+  const wrapper = document.createElement("div");
+  wrapper.appendChild(clone);
 
-  // Force light mode
-  clone.style.background = "#ffffff";
-  clone.style.color = "#000000";
-  clone.style.fontFamily = "Calibri, sans-serif";
+  // Paksa light style
+  wrapper.style.backgroundColor = "#ffffff";
+  wrapper.style.color = "#000000";
+  wrapper.style.fontFamily = "Calibri, sans-serif";
+  wrapper.style.padding = "20px";
 
-  clone.querySelectorAll("*").forEach(el => {
-    el.style.background = "#ffffff";
+  // Terapkan ke semua anak
+  wrapper.querySelectorAll("*").forEach(el => {
+    el.style.backgroundColor = "#ffffff";
     el.style.color = "#000000";
     el.style.borderColor = "#000000";
     el.style.fontFamily = "Calibri, sans-serif";
   });
 
-  clone.style.position = "fixed";
-  clone.style.top = "-9999px";
-  document.body.appendChild(clone);
+  // Tampilkan elemen sebelum convert (tapi di luar layar)
+  wrapper.style.position = "fixed";
+  wrapper.style.left = "-9999px";
+  wrapper.style.top = "0";
+  wrapper.style.width = "210mm";
+  wrapper.style.maxWidth = "210mm";
+  document.body.appendChild(wrapper);
 
-  html2pdf()
-    .set({
-      margin: 0.5,
-      filename: "Tanda_Terima_CM.pdf",
-      image: { type: "jpeg", quality: 1 },
-      html2canvas: { scale: 2, backgroundColor: "#ffffff" },
-      jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
-    })
-    .from(clone)
-    .save()
-    .then(() => document.body.removeChild(clone));
+  // Delay agar DOM siap render
+  setTimeout(() => {
+    html2pdf()
+      .set({
+        margin: 0.5,
+        filename: "Tanda_Terima_CM.pdf",
+        image: { type: "jpeg", quality: 1 },
+        html2canvas: {
+          scale: 2,
+          backgroundColor: "#ffffff",
+        },
+        jsPDF: { unit: "in", format: "a4", orientation: "portrait" }
+      })
+      .from(wrapper)
+      .save()
+      .then(() => {
+        document.body.removeChild(wrapper);
+      });
+  }, 100);
 }
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const inputFile = document.getElementById('multiPdf');
