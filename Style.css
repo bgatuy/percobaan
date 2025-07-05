@@ -22,7 +22,7 @@ nav {
   justify-content: center;
   align-items: center;
   flex-wrap: wrap; /* bisa turun jika benar-benar sempit, tapi tetap horizontal sebisa mungkin */
-  gap: 10px;
+  gap: 5px;
   margin-bottom: 25px;
   flex-direction: row;
 }
@@ -206,12 +206,14 @@ input[type="file"] {
     font-size: 15px;
   }
 
-  nav a {
-    display: block;
-    margin: 6px auto;
-    width: fit-content;
+  @media (max-width: 600px) {
+  nav {
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
   }
 }
+
 
 @media (prefers-color-scheme: dark) {
       body {
