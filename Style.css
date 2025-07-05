@@ -548,7 +548,7 @@ body {
       padding: 20px;
       border-radius: 10px;
       width: 300px;
-      margin: 0 auto;
+      margin: center;
       text-align: center;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
