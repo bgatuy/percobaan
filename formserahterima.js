@@ -98,7 +98,7 @@ function downloadPDF() {
   chunks.forEach((chunk, index) => {
     if (index > 0) doc.addPage();
 
-    doc.setFontSize(20);
+    doc.setFontSize(25);
     doc.setFont(undefined, "bold");
     doc.text("FORM TANDA TERIMA CM", 105, 20, { align: "center" });
 
@@ -115,7 +115,7 @@ function downloadPDF() {
       }),
       startY: 30,
       styles: {
-        fontSize: 6,
+        fontSize: 7,
         halign: "center",
         valign: "middle",
         lineColor: [0, 0, 0],
@@ -124,11 +124,11 @@ function downloadPDF() {
       },
       headStyles: {
         fillColor: false,
-        fontSize: 9,
+        fontSize: 10,
         fontStyle: "bold"
       },
       bodyStyles: {
-        fontSize: 6,
+        fontSize: 7,
         textColor: [0, 0, 0],
         lineColor: [0, 0, 0]
       },
@@ -151,13 +151,13 @@ function downloadPDF() {
       },
       headStyles: {
         fontStyle: "bold",
-        fontSize: 9,
+        fontSize: 10,
         textColor: [0, 0, 0],
         fillColor: false,
         minCellHeight: 10
       },
       bodyStyles: {
-        minCellHeight: 40
+        minCellHeight: 30
       },
       columnStyles: {
         0: { cellWidth: 60.59 },
