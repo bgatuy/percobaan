@@ -80,14 +80,14 @@ h2 {
 }
 
 .upload-label:hover {
-  background-color: #0059ff; /* Biru muda saat hover */
+  background-color: #2196f3; /* Biru muda saat hover */
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 /* Efek sentuh/tap (mobile) */
 .upload-label:active {
-  background-color: #0059ff;
+  background-color: #2196f3;
   transform: scale(0.98);
 }
 
