@@ -154,7 +154,7 @@ function downloadPDF() {
         fontSize: 10,
         textColor: [0, 0, 0],
         fillColor: false,
-        minCellHeight: 10
+        minCellHeight: 5
       },
       bodyStyles: {
         minCellHeight: 30
