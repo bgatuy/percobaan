@@ -2,305 +2,91 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Form Tanda Terima CM</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Buat Form Tanda Terima CM</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- ✅ Favicon ditambahkan di sini -->
+  <link rel="icon" href="https://api.iconify.design/mdi:file-document.svg" type="image/svg+xml" />
+
+  <!-- Style dan ikon -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      margin: 0;
-      background: #fff;
-      color: #000;
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: auto;
-      text-align: center;
-    }
-
-    .input-group {
-      margin: 10px 0;
-    }
-
-    input[type="date"] {
-      padding: 8px;
-      font-size: 16px;
-    }
-
-    label.upload-label {
-      display: inline-block;
-      background: #007bff;
-      color: white;
-      padding: 10px 16px;
-      border-radius: 5px;
-      cursor: pointer;
-      margin: 10px;
-    }
-
-    input[type="file"] {
-      display: none;
-    }
-
-    .btn {
-      padding: 10px 16px;
-      font-size: 16px;
-      margin: 5px;
-      cursor: pointer;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-      font-size: 14px;
-    }
-
-    th, td {
-      border: 1px solid #000;
-      padding: 8px;
-      text-align: center;
-    }
-
-    th {
-      background: #f0f0f0;
-      font-weight: bold;
-    }
-
-    @media print {
-      body {
-        background: white;
-        color: black;
-      }
-
-      .no-print {
-        display: none;
-      }
-    }
-  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+  
 </head>
 <body>
+   <nav>
+    <a href="index.html">Trackmate</a> |
+    <a href="Appsheet.html">AppSheet</a> |
+    <a href="formserahterima.html">Form Serah Terima</a> |
+    <a href="merge.html">Merge PDF</a>
+  </nav>
+ 
   <div class="container">
-    <h1>Form Tanda Terima CM</h1>
+    <div class="form-box">
+  <h1>Buat Form Tanda Terima CM</h1>
 
-    <div class="input-group">
-      <label for="tanggal">Tanggal Serah Terima:</label>
-      <input type="date" id="tanggal" />
-    </div>
-
-    <div class="input-group">
-      <label for="filePdf" class="upload-label">📁 Pilih File PDF</label>
-      <input type="file" id="filePdf" accept="application/pdf" multiple />
-      <span id="fileCount"></span>
-    </div>
-
-    <div class="input-group">
-      <button class="btn" onclick="prosesFile()">Proses</button>
-      <button class="btn" onclick="downloadPDF()">Download PDF</button>
-    </div>
-
-    <div id="output"></div>
+  <div class="input-group">
+    <label for="tanggalSerah">Input Tanggal Serah Terima:</label>
+    <input type="date" id="tanggalSerah">
   </div>
 
-  <script>
-    const fileInput = document.getElementById("filePdf");
-    const fileCount = document.getElementById("fileCount");
-    const output = document.getElementById("output");
-    let dataTabel = [];
+  <label for="pdfInput" class="upload-label">
+    <span class="material-icons">picture_as_pdf</span> Pilih File PDF
+    </label>
+    <input type="file" id="pdfInput" accept="application/pdf" multiple>
+    <span id="fileInfo" style="display: none;">
+  <i class="fas fa-folder-open" style="margin-right: 4px;"></i> 
+  <span id="fileCountText"></span>
+</span>
 
-    fileInput.addEventListener("change", () => {
-      fileCount.textContent = `${fileInput.files.length} file dipilih`;
-    });
+  <div class="btn-wrapper">
+    <button onclick="prosesPDF()">Proses</button>
+    <button onclick="downloadPDF()" id="downloadBtn" style="display:none;">Download PDF</button>
+  </div>
 
-    function extractFromPDFText(text) {
-      const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
-      let namaUker = "";
+  <div id="loading">Memproses file <span class="spinner"></span></div>
+</div>
 
-      const ukerLine = lines.find(line => /unit\s*kerja\s*[:\-]/i.test(line));
-      if (ukerLine) {
-        const match = ukerLine.match(/unit\s*kerja\s*[:\-]\s*(.*)/i);
-        if (match && match[1]) {
-          namaUker = match[1].replace(/^[:\s]+/, '').trim();
-        }
-      }
+    <div id="hasilContainer" class="hasil" style="display:none;">
+      <h3 id="judulHasil">FORM TANDA TERIMA CM</h3>
+      <table id="previewTable">
+        <thead>
+          <tr>
+            <th>NO.</th>
+            <th>TANGGAL SERAH TERIMA</th>
+            <th>NAMA UKER</th>
+            <th>TANGGAL PEKERJAAN</th>
+          </tr>
+        </thead>
+        <tbody id="tabelData"></tbody>
+      </table>
 
-      if (!namaUker) {
-        const index = lines.findIndex(line => /unit\s*kerja/i.test(line));
-        if (index !== -1) {
-          const collected = [];
-          for (let i = index + 1; i < lines.length; i++) {
-            const line = lines[i];
-            if (/^(tanggal|pelapor|jenis perangkat|asset id|kantor cabang)/i.test(line)) break;
-            if (line && !/unit\s*kerja/i.test(line)) {
-              collected.push(line);
-            }
-          }
-          if (collected.length) {
-            namaUker = collected.join(' ').replace(/^[:\s]+/, '').trim();
-          }
-        }
-      }
+      <table id="ttdTable">
+        <thead>
+          <tr>
+            <th>TTD TEKNISI</th>
+            <th>TTD LEADER</th>
+            <th>TTD CALL CENTER</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="height: 60px;"></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-      if (!namaUker) {
-        const keywordIndex = lines.findIndex(line =>
-          /(BRI|ENTERPRISE|SYNDICATION|MANAGEMENT|LOGISTIC|CORPORATE|ACCOUNTING|TRANSFORMATION|PROCUREMENT)/i.test(line)
-        );
-        if (keywordIndex !== -1) {
-          const collected = [];
-          for (let i = keywordIndex; i < lines.length; i++) {
-            const line = lines[i];
-            if (/^(tanggal|pelapor|jenis perangkat|asset id|kantor cabang)/i.test(line)) break;
-            collected.push(line);
-          }
-          if (collected.length) {
-            namaUker = collected.join(' ').replace(/^[:\s]+/, '').trim();
-          }
-        }
-      }
-
-      if (!namaUker) {
-        namaUker = "Tidak ditemukan";
-      }
-
-      const tanggalTiketMatch = text.match(/Tanggal.*?:\s*(\d{2}[\/\-]\d{2}[\/\-]\d{4})/);
-      const tanggalPekerjaan = tanggalTiketMatch ? tanggalTiketMatch[1] : "Tidak ditemukan";
-
-      return { namaUker, tanggalPekerjaan };
-    }
-
-    async function prosesFile() {
-      const files = fileInput.files;
-      const tanggal = document.getElementById("tanggal").value;
-      if (!tanggal || files.length === 0) return alert("Isi tanggal dan pilih file");
-
-      const [y, m, d] = tanggal.split("-");
-      const formatted = `${d}/${m}/${y}`;
-
-      dataTabel = [];
-
-      for (let i = 0; i < files.length; i++) {
-        const buffer = await files[i].arrayBuffer();
-        const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
-        let fullText = "";
-
-        for (let j = 1; j <= pdf.numPages; j++) {
-          const page = await pdf.getPage(j);
-          const content = await page.getTextContent();
-          fullText += content.items.map(item => item.str).join("\n");
-        }
-
-        const { namaUker, tanggalPekerjaan } = extractFromPDFText(fullText);
-        dataTabel.push({ no: i + 1, tanggalSerah: formatted, namaUker, tanggalPekerjaan });
-      }
-
-      renderTabel();
-    }
-
-    function renderTabel() {
-      let html = `
-      <table>
-        <tr>
-          <th>NO.</th>
-          <th>TANGGAL SERAH TERIMA</th>
-          <th>NAMA UKER</th>
-          <th>TANGGAL PEKERJAAN</th>
-        </tr>`;
-      dataTabel.forEach(row => {
-        html += `<tr>
-          <td>${row.no}</td>
-          <td>${row.tanggalSerah}</td>
-          <td>${row.namaUker}</td>
-          <td>${row.tanggalPekerjaan}</td>
-        </tr>`;
-      });
-      html += `</table><br>
-      <table>
-        <tr>
-          <th>TTD TEKNISI</th>
-          <th>TTD LEADER</th>
-          <th>TTD CALL CENTER</th>
-        </tr>
-        <tr>
-          <td style="height:80px"></td>
-          <td></td>
-          <td></td>
-        </tr>
-      </table>`;
-
-      output.innerHTML = `<h2>FORM TANDA TERIMA CM</h2>` + html;
-    }
-
-    async function downloadPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ unit: "pt", format: "a4" });
-      const margin = 40;
-      const pageWidth = doc.internal.pageSize.getWidth();
-      const usableWidth = pageWidth - margin * 2;
-
-      const colWidths = [40, 110, 260, 120];
-      const header = ["NO.", "TANGGAL SERAH TERIMA", "NAMA UKER", "TANGGAL PEKERJAAN"];
-
-      let y = 60;
-      doc.setFont("Helvetica", "bold");
-      doc.setFontSize(18);
-      doc.text("FORM TANDA TERIMA CM", pageWidth / 2, y, { align: "center" });
-
-      y += 30;
-      doc.setFontSize(12);
-      let x = margin;
-      header.forEach((h, i) => {
-        doc.text(h, x + 2, y);
-        x += colWidths[i];
-      });
-
-      doc.setFont("Helvetica", "normal");
-      y += 14;
-      dataTabel.forEach(row => {
-        const values = [String(row.no), row.tanggalSerah, row.namaUker, row.tanggalPekerjaan];
-        x = margin;
-        y += 18;
-        values.forEach((val, i) => {
-          doc.text(val, x + 2, y);
-          x += colWidths[i];
-        });
-      });
-
-      y += 40;
-      const boxWidth = (usableWidth - 2) / 3;
-      const boxHeight = 80;
-      const signTitles = ["TTD TEKNISI", "TTD LEADER", "TTD CALL CENTER"];
-
-      doc.setFont("Helvetica", "bold");
-      x = margin;
-      signTitles.forEach((txt, i) => {
-        doc.text(txt, x + boxWidth / 2, y, { align: "center" });
-        x += boxWidth;
-      });
-
-      y += 5;
-      x = margin;
-      signTitles.forEach(() => {
-        doc.rect(x, y, boxWidth, boxHeight);
-        x += boxWidth;
-      });
-
-      doc.save("Tanda_Terima_CM.pdf");
-    }
-  </script>
+  <script src="formserahterima.js"></script>
 </body>
 </html>

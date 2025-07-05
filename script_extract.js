@@ -1,10 +1,6 @@
-
 const fileInput = document.getElementById('pdfFile');
 const output = document.getElementById('output');
 const copyBtn = document.getElementById('copyBtn');
-const waLink = document.getElementById('waLink');
-
-let finalOutput = "";
 
 function formatTanggalIndonesia(tanggal) {
   const bulan = [
@@ -32,6 +28,8 @@ function extractFlexibleBlock(lines, startLabel, stopLabels = []) {
   }
   return result.replace(/^:+/, '').replace(/:+$/, '').replace(/^:+\s*/, '').replace(/\s*:+\s*/g, ' ').replace(/\s+/g, ' ').trim();
 }
+
+let lastExtractedText = "";
 
 fileInput.addEventListener('change', async function () {
   const file = fileInput.files[0];
@@ -72,7 +70,8 @@ fileInput.addEventListener('change', async function () {
     const pic = clean(rawText.match(/Pelapor\s*:\s*([^\(]+)/)?.[1]);
     const status = clean(rawText.match(/STATUS PEKERJAAN\s*:\s*(.+)/)?.[1]);
 
-   finalOutput = `Selamat Pagi/Siang/Sore Petugas Call Center, Update Pekerjaan
+    const finalOutput =
+`Selamat Pagi/Siang/Sore Petugas Call Center, Update Pekerjaan
 
 Unit Kerja : ${unitKerja}
 Kantor Cabang : ${kantorCabang}
@@ -96,19 +95,12 @@ Type Perangkat : ${type}
 PIC : ${pic}
 Status : ${status}`;
 
-
-        output.textContent = finalOutput;
-
-    // WhatsApp Integration
-    const waLink = document.getElementById("waLink");
-    const pesan = encodeURIComponent(finalOutput);
-    waLink.href = `https://wa.me/?text=${pesan}`;
-    waLink.style.display = "inline-block";
+    lastExtractedText = finalOutput;
+    output.textContent = finalOutput;
   };
 
-  reader.readAsArrayBuffer(file); // ✅ Jangan ada kurung kurawal setelah ini
-}); // ✅ Ini hanya menutup fileInput.addEventListener
-
+  reader.readAsArrayBuffer(file);
+});
 
 copyBtn.addEventListener('click', () => {
   navigator.clipboard.writeText(output.textContent || '').catch(console.error);
