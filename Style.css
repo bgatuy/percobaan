@@ -144,7 +144,7 @@ input[type="file"] {
     color: #f0f0f0;
   }
 
-  
+  {
   .upload-label {
     background-color: #1e1e1e;
     color: #f0f0f0;
@@ -173,7 +173,6 @@ input[type="file"] {
   }
 
  /* DARK MODE NAV LINK */
- {
   nav a {
     background-color: #1e1e1e;
     border-color: #2196f3;
