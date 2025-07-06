@@ -169,5 +169,5 @@ function downloadPDF() {
     });
   });
 
-  doc.save("FORM_TANDA_TERIMA_CM.pdf");
+  doc.save("FORM TANDA TERIMA CM.pdf");
 }
